@@ -1,15 +1,21 @@
 <template>
   <el-container>
-    <el-aside width="200px">
+    <el-aside width="100px">
+      <div style="width: 100px">
+        <img style="width: 100px" :src="logo" alt="logo" />
+      </div>
       <el-menu :default-active="this.$router.path" router>
+        <el-menu-item index="/home">
+          <i class="el-icon-s-home" style="color: white"></i>
+        </el-menu-item>
         <el-menu-item index="/upload">
-          <template slot="title">数据接口</template>
+          <i class="el-icon-folder-opened" style="color: white"></i>
         </el-menu-item>
         <el-menu-item index="/agent">
-          <template slot="title">agent对话</template>
+          <i class="el-icon-s-comment" style="color: white"></i>
         </el-menu-item>
-        <el-menu-item index="/mlmodel">
-          <template slot="title">ML模型</template>
+        <el-menu-item index="/mlmodel" @click="resetView">
+          <i class="el-icon-data-line" style="color: white"></i>
         </el-menu-item>
       </el-menu>
     </el-aside>
@@ -17,93 +23,76 @@
       <el-header>
         <el-row>
           <el-col :span="4" style="text-align: left">
-            <div v-text="pageName"></div>
+            您好, <span id="salesman" v-text="salesName"></span>
           </el-col>
           <el-col :span="20" style="text-align: right">
-            Hello, <span id="salesman" v-text="salesName"></span>
-            <el-button id="log-out-button" icon="el-icon-switch-button" @click="$router.push({path: '/login'})"></el-button>
+            <el-button style="color: white" id="log-out-button" icon="el-icon-switch-button" @click="$router.push({path: '/login'})"></el-button>
           </el-col>
         </el-row>
       </el-header>
-      <el-main>
-        <!-- CSV 上传框（仅在有标签且已标注时显示） -->
-          <!-- 新增的头部行 -->
-        <el-row style="margin-bottom: 20px;" align="middle">
-          <!-- 左侧 "数据集" 文本 -->
-          <el-col :span="4" style="text-align: left;">
-            <h2 style="margin: 0;">ML模型列表</h2>
-          </el-col>
-          <!-- 右侧 "新增" 按钮 -->
-        </el-row>
-        <!-- 模块布局 -->
-        <el-row :gutter="20">
-          <el-col :span="8" v-for="(module, index) in modules" :key="index">
-            <el-card class="module-card" @click="openDialog(index)" shadow="hover">
-              <img :src="module.image" class="module-image" />
-              <p class="module-text">{{ module.text }}</p>
-            </el-card>
-          </el-col>
-        </el-row>
+      <template>
+        <el-main>
+          <el-card style="height: 100%" shadow="never">
+            <!-- 图片显示区 -->
+            <div v-if="selectedNumber === null" class="image-grid">
+              <el-row gutter="20">
+                <el-col :span="12" v-for="(image, index) in images" :key="index">
+                  <img
+                    :src="image"
+                    alt="图片"
+                    class="grid-image"
+                    @click="handleImageClick(index + 1)" />
+                </el-col>
+              </el-row>
+            </div>
 
-        <!-- 弹窗 -->
-        <el-dialog title="编辑模块" :visible.sync="dialogVisible" width="50%">
-          <el-form>
-            <el-form-item label="图片">
-              <img :src="selectedModule.image" class="dialog-image" />
-            </el-form-item>
-            <el-form-item label="描述">
-              <el-input
-                type="textarea"
-                v-model="selectedModule.text"
-                placeholder="请输入描述文字"
-              />
-            </el-form-item>
-          </el-form>
-          <template #footer>
-            <el-button @click="dialogVisible = false">取消</el-button>
-            <el-button type="primary" @click="saveChanges">保存</el-button>
-          </template>
-        </el-dialog>
-      </el-main>
+            <!-- 数字显示区 -->
+            <div v-else class="number-display">
+              <span class="number">{{ selectedNumber }}</span>
+            </div>
+          </el-card>
+        </el-main>
+      </template>
+
     </el-container>
   </el-container>
 </template>
 
 <script>
+import logo from '@/assets/logo1.jpg'
+import image1 from '@/assets/1.png'
+import image2 from '@/assets/2.png'
+import image3 from '@/assets/3.png'
+import image4 from '@/assets/4.png'
 export default {
   name: 'mlmodel',
   data() {
     return {
+      logo: logo,
       pageName: 'ML模型',
-      csvFileName: '',
-      modules: [
-        { image: "https://via.placeholder.com/300", text: "模块1描述" },
-        { image: "https://via.placeholder.com/300", text: "模块2描述" },
-        { image: "https://via.placeholder.com/300", text: "模块3描述" },
+      salesName: this.$cookie.get('name'),
+      images: [
+        image1, // 替换为实际图片路径
+        image2,
+        image3,
+        image4,
       ],
-      dialogVisible: false,
-      selectedModule: {}, // 当前选中的模块
+      selectedNumber: null, // 用于记录点击后显示的数字
     }
   },
   computed: {},
   mounted: function () {
-
+    this.selectedNumber = this.$route.query.id
+    if (this.selectedNumber === '' || this.selectedNumber === undefined){
+      this.selectedNumber = null
+    }
   },
   methods: {
-    openDialog(index) {
-      this.selectedModule = { ...this.modules[index] }; // 复制选中的模块内容
-      console.log(this.dialogVisible)
-      this.dialogVisible = true;
-      console.log(this.dialogVisible)
+    handleImageClick(number) {
+      this.selectedNumber = number; // 设置当前点击的数字
     },
-    saveChanges() {
-      const index = this.modules.findIndex(
-        (module) => module.text === this.selectedModule.text
-      );
-      if (index > -1) {
-        this.modules[index] = { ...this.selectedModule };
-      }
-      this.dialogVisible = false;
+    resetView() {
+      this.selectedNumber = null; // 重置为图片显示状态
     },
   }
 }
@@ -113,41 +102,35 @@ export default {
 .el-container {
   height: 100vh;
 }
-
 .el-header {
-  background-color: #75d9d9;
-  color: black;
+  background-color: #00237d;
+  color: white;
   font-size: large;
   font-weight: bold;
   line-height: 60px;
   text-align: right;
 }
-
 .el-aside {
-  background: #f0ffff;
+  background: #032262;
   text-align: center;
   line-height: 60px;
 }
-
 .el-main {
-  background-color: beige;
+  background-color: white;
   color: black;
   text-align: center;
 }
-
 #log-out-button {
   background: none;
   border: none;
 }
-
 .el-menu-item {
-  background-color: #f0ffff;
+  background-color: #032262;
+  color: white;
 }
-
 .el-submenu {
   background-color: #f0ffff;
 }
-
 .label-empty {
   background-color: #ffcccb; /* 红色背景 */
 }
@@ -155,28 +138,44 @@ export default {
 .label-filled {
   background-color: #d3f9d8; /* 绿色背景 */
 }
+.el-image {
+  margin-bottom: 20px;
+}
 
 .el-image {
   margin-bottom: 20px;
 }
-.module-card {
-  cursor: pointer;
-  text-align: center;
-  padding: 20px;
+.image-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
 }
-.module-image {
+
+.grid-image {
   width: 100%;
-  height: auto;
-  margin-bottom: 10px;
+  object-fit: cover;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.3s;
 }
-.module-text {
-  font-size: 16px;
+
+.grid-image:hover {
+  transform: scale(1.05);
+}
+
+.number-display {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  font-size: 48px;
   font-weight: bold;
 }
-.dialog-image {
-  width: 100%;
-  height: auto;
-  margin-bottom: 10px;
-  border-radius: 4px;
+
+.number {
+  padding: 20px;
+  background-color: #f0f0f0;
+  border-radius: 50%;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
 }
 </style>

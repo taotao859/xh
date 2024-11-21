@@ -4,6 +4,7 @@ import login from "../components/Login.vue";
 import mlmodel from "../components/mlmodel.vue";
 import upload from "../components/upload.vue";
 import agent from "../components/agent.vue";
+import home from "../components/home.vue";
 
 Vue.use(Router)
 
@@ -18,6 +19,11 @@ export default new Router({
       path: '/login',
       name: 'login',
       component: login
+    },
+    {
+      path: '/home',
+      name: 'home',
+      component: home
     },
     {
       path: '/mlmodel',
