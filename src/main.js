@@ -8,6 +8,9 @@ import 'element-ui/lib/theme-chalk/index.css'
 import axios from 'axios'
 import VueCookies from 'vue-cookie'
 import qs from 'qs'
+import * as echarts from 'echarts';
+
+
 // 引入vuex-store
 
 axios.defaults.baseURL = 'http://localhost:8443/api'

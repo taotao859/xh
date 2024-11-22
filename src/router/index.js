@@ -5,6 +5,7 @@ import mlmodel from "../components/mlmodel.vue";
 import upload from "../components/upload.vue";
 import agent from "../components/agent.vue";
 import home from "../components/home.vue";
+import test from "../components/test.vue";
 
 Vue.use(Router)
 
@@ -39,6 +40,11 @@ export default new Router({
       path: '/agent',
       name: 'agent',
       component: agent
+    },
+    {
+      path: '/test',
+      name: 'test',
+      component: test
     }
   ]
 })
