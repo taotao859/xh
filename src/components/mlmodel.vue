@@ -84,7 +84,7 @@
               <!-- 弹窗 -->
               <el-dialog style="max-height: 700px;overflow: hidden" v-if="showDialog" :visible.sync="showDialog" title="搜索结果">
                 <div class="dialog-content">
-                  <div style="max-height: 700px;overflow: auto" class="left-table">
+                  <div style="height: 400px;overflow: auto" class="left-table">
                     <el-table :data="featureData" border>
                       <el-table-column prop="feature" label="特征" min-width="200px"></el-table-column>
                       <el-table-column prop="value" label="值" min-width="200px"></el-table-column>
