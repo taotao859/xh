@@ -47,7 +47,7 @@
               justify-content: center;
               gap: 20px;">
             <div class="row small-cubes">
-              <div class="cube_small blue" @click="handleClick('2')" style="z-index: 7">
+              <div class="cube_small blue" @click="handleClick('1')" style="z-index: 7">
                 <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small_top top_small"><div style="margin-top: 35px">信贷欺诈</div></div>
@@ -60,7 +60,7 @@
 
             </div>
             <div class="row_2 small-cubes">
-              <div class="cube_small blue" @click="handleClick('1')" style="z-index: 7">
+              <div class="cube_small blue" @click="handleClick('2')" style="z-index: 7">
                 <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small_top top_small"><div style="margin-top: 35px">洗钱欺诈</div></div>

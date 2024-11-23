@@ -82,9 +82,9 @@
               </div>
 
               <!-- 弹窗 -->
-              <el-dialog v-if="showDialog" :visible.sync="showDialog" title="搜索结果">
+              <el-dialog style="max-height: 700px;overflow: hidden" v-if="showDialog" :visible.sync="showDialog" title="搜索结果">
                 <div class="dialog-content">
-                  <div class="left-table">
+                  <div style="max-height: 700px;overflow: auto" class="left-table">
                     <el-table :data="featureData" border>
                       <el-table-column prop="feature" label="特征" min-width="200px"></el-table-column>
                       <el-table-column prop="value" label="值" min-width="200px"></el-table-column>
@@ -228,41 +228,18 @@ export default {
     if (this.selectedNumber === '' || this.selectedNumber === undefined){
       this.selectedNumber = null
       this.selectedFeature = null
-    } else if ( this.activeTab === 'result') {
-      if (this.selectedNumber === 1){
-        this.$nextTick(() => {
-            this.$axios.post('/upload_black_money', {}).then(Response => {
-              this.name_list = Response.data.name_list
-              this.data = Response.data.data
-              this.result = Response.data.result
-              this.legend_result = Response.data.legend_result
-              this.result_list = Response.data.result_list
-              this.data_destiny = Response.data.data_destiny
-              let feature_result = []
-              for (let i = 0; i < this.name_list.length; i++) {
-                console.log(this.name_list[i]);
-                feature_result.push({ label: this.name_list[i], iconClass: this.iconClass_list[i] },)
-              }
-              this.features = feature_result
-            })
-            this.initPieChart(this.data, this.legend_result);
-          }
-        )}
-      else {
-        this.$message({
-          message: "功能未开放",
-          type: "warning",
-        });
-      }
+    } else  {
+      this.handleImageClick(this.selectedNumber)
+
     }
   },
   methods: {
     handleImageClick(number) {
-
+      this.activeTab = 'result'
       if (this.activeTab === 'result') {
-        if (number === 1){
+        if (number !== 4){
           this.$nextTick(() => {
-            this.$axios.post('/upload_black_money', {}).then(Response => {
+            this.$axios.post('/upload_black_money', this.$qs.stringify({number: number})).then(Response => {
               this.name_list = Response.data.name_list
               this.data = Response.data.data
               this.result = Response.data.result
@@ -271,10 +248,11 @@ export default {
               this.data_destiny = Response.data.data_destiny
               let feature_result = []
               for (let i = 0; i < this.name_list.length; i++) {
-                console.log(this.name_list[i]);
+                // console.log(this.name_list[i]);
                 feature_result.push({ label: this.name_list[i], iconClass: this.iconClass_list[i] },)
               }
               this.features = feature_result
+              console.log(this.result, this.legend_result)
               this.initPieChart(this.result, this.legend_result);
             })
             this.selectedNumber = number; // 设置当前点击的数字
@@ -290,7 +268,21 @@ export default {
     },
     resetView() {
       this.selectedNumber = null; // 重置为图片显示状态
-      this.selectedFeature = null
+      this.selectedFeature = null;
+      this.legend_data= [],
+      this.data = [],
+      this.data_destiny= [],
+      this.name_list= [],
+      this.result= [],
+      this.result_list= []
+      if (this.chartInstance) {
+        this.chartInstance.dispose(); // 切换页面时销毁图表
+        this.chartInstance = null;
+      }
+      if (this.chartInstance_feature) {
+        this.chartInstance_feature.dispose(); // 切换页面时销毁图表
+        this.chartInstance_feature = null;
+      }
     },
     switchTab(tab) {
       this.activeTab = tab;
@@ -303,7 +295,6 @@ export default {
       }
     },
     handleSearch() {
-      this.showDialog = true;
       this.$axios.post('/search_feature', this.$qs.stringify({id: this.searchQuery, number: this.selectedNumber})).then(Response => {
         if (Response.data.code === 206){
           this.$message({
@@ -312,9 +303,11 @@ export default {
           });
           return
         }
+        // console.log(Response.data)
         this.featureData = Response.data.feature_list
         this.shareProbability = Response.data.class_value
         this.userVerdict = Response.data.class_type
+        this.showDialog = true;
       })
 
     },
@@ -423,9 +416,9 @@ export default {
         console.error("Pie chart container not found!");
         return;
       }
-      console.log(1)
+      console.log(this.data)
       this.chartInstance = echarts.init(chartDom);
-      console.log(2)
+      console.log(this.legend_data)
       const option = {
         title: {
           text: "数据分布",
@@ -457,6 +450,7 @@ export default {
           },
         ],
       };
+      console.log(3)
       this.chartInstance.setOption(option);
     },
   }
@@ -557,6 +551,7 @@ export default {
 
 .left-table {
   width: 50%;
+
 }
 
 .right-summary {
