@@ -97,12 +97,12 @@
                 v-for="(msg, index) in messages"
                 :key="index"
                 class="message-box"
-                :class="msg.sender === 'user' ? 'user-box' : 'bot-box'"
+                :class="msg.role === 'user' ? 'user-box' : 'bot-box'"
               >
-                <div :class="{ 'name-box': msg.sender === 'user', 'ai-box': msg.sender === 'bot' }">
-                  {{ msg.sender === 'user' ? salesName : 'AI' }}
+                <div :class="{ 'name-box': msg.role === 'user', 'ai-box': msg.role === 'system' }">
+                  {{ msg.role === 'user' ? salesName : 'AI' }}
                 </div>
-                <div class="content-box">{{ msg.text }}</div>
+                <div class="content-box">{{ msg.content }}</div>
               </div>
             </div>
 
@@ -119,13 +119,14 @@
             >
               <el-input
                 type="textarea"
+                :disabled="disabled_info"
                 v-model="userInput"
                 placeholder="输入你的问题"
                 rows="3"
                 style="margin-bottom: 10px;"
                 @keyup.enter.native="sendMessage"
               ></el-input>
-              <el-button type="primary" @click="sendMessage">发送</el-button>
+              <el-button :disabled="disabled_info" type="primary" @click="sendMessage">发送</el-button>
             </div>
           </div>
         </div>
@@ -155,9 +156,9 @@
 <!--              align-items: flex-start;-->
 <!--              /*align-items: flex-start; !* 默认对齐方式 *!"-->
 <!--          >-->
-<!--            <div v-for="(msg, index) in messages" :key="index" class="message-box" :class="msg.sender === 'user' ? 'user-box' : 'bot-box'">-->
-<!--              <div :class="{ 'name-box': msg.sender === 'user', 'ai-box': msg.sender === 'bot' }">{{ msg.sender === 'user' ? salesName : 'AI' }}</div>-->
-<!--              <div class="content-box">{{ msg.text }}</div>-->
+<!--            <div v-for="(msg, index) in messages" :key="index" class="message-box" :class="msg.role === 'user' ? 'user-box' : 'bot-box'">-->
+<!--              <div :class="{ 'name-box': msg.role === 'user', 'ai-box': msg.role === 'bot' }">{{ msg.role === 'user' ? salesName : 'AI' }}</div>-->
+<!--              <div class="content-box">{{ msg.content }}</div>-->
 <!--            </div>-->
 <!--          </div>-->
 
@@ -186,6 +187,7 @@ export default {
       pageName: '大模型agent对话',
       salesName: this.$cookie.get('name'),
       userInput: '', // 用户输入的内容
+      disabled_info: false,
       messages: [] // 存储对话记录
     }
   },
@@ -193,22 +195,26 @@ export default {
 
   },
   mounted: function () {
-
+    this.disabled_info = false
   },
   methods: {
     sendMessage() {
       if (this.userInput.trim()) {
         // 将用户消息添加到消息记录
-        this.messages.push({ sender: "user", text: this.userInput });
+        this.$message.success('开始对话，请稍后');
+        this.disabled_info = true
+        this.messages.push({ role: "user", content: this.userInput });
         this.scrollToBottom()
         // 清空输入框
         this.userInput = "";
-
-        // 模拟 AI 回复
-        setTimeout(() => {
-          this.messages.push({ sender: "bot", text: "你好，有什么可以帮您的吗？" });
+        const formData = new FormData()
+        formData.append('messages', JSON.stringify(this.messages))
+        this.$axios.post('/getAgent', formData).then(Response => {
+          this.$message.success('对话成功');
+          this.messages.push({ role: "system", content: Response.data.result });
           this.scrollToBottom()
-        }, 1000);
+          this.disabled_info = false
+        })
 
 
       }

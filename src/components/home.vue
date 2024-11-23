@@ -30,8 +30,8 @@
           </el-col>
         </el-row>
       </el-header>
-      <el-main>
-        <el-card style="height: 100%" shadow="never">
+      <el-main style="overflow: hidden">
+        <el-card style="height: 100%; overflow-y:auto" shadow="never">
           <el-row style="margin-bottom: 300px;" align="middle">
             <el-col :span="4" style="text-align: left;">
               <h2 style="margin: 0;">主页</h2>

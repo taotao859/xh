@@ -30,8 +30,8 @@
           </el-col>
         </el-row>
       </el-header>
-      <el-main>
-        <el-card style="height: 100%" shadow="never">
+      <el-main style="overflow: hidden">
+        <el-card style="height: 100%; overflow-y:auto" shadow="never">
           <!-- 主体内容 -->
           <el-row style="margin-bottom: 20px;" align="middle">
             <el-col :span="4" style="text-align: left;">
@@ -48,13 +48,13 @@
                   <h3>数据库上传</h3>
                   <div class="buttons-container">
                     <el-button
-                      v-for="(btn, index) in 3"
+                      v-for="(btn, index) in buttom_1"
                       :key="`db-btn-${index}`"
                       class="icon-button"
                       @click="handleFeatureUnavailable"
                       @mouseover="handleFeatureUnavailable"
                     >
-                      <img :src="logo" alt="功能" class="button-icon" />
+                      <img :src="btn" alt="功能" class="button-icon" />
                     </el-button>
                   </div>
                 </div>
@@ -64,23 +64,23 @@
                   <h3>第三方数据上传</h3>
                   <div class="buttons-container" style="flex-wrap: wrap;">
                     <el-button
-                      v-for="(btn, index) in 3"
+                      v-for="(btn, index) in buttom_2"
                       :key="`thirdparty-btn-${index}`"
                       class="icon-button"
                       @click="handleFeatureUnavailable"
                       @mouseover="handleFeatureUnavailable"
                     >
-                      <img :src="logo" alt="功能" class="button-icon" />
+                      <img :src="btn" alt="功能" class="button-icon" />
                     </el-button>
                     <br><br>
                     <el-button
-                      v-for="(btn, index) in 3"
+                      v-for="(btn, index) in buttom_3"
                       :key="`thirdparty-btn-${index}`"
                       class="icon-button"
                       @click="handleFeatureUnavailable"
                       @mouseover="handleFeatureUnavailable"
                     >
-                      <img :src="logo" alt="功能" class="button-icon" />
+                      <img :src="btn" alt="功能" class="button-icon" />
                     </el-button>
                   </div>
                 </div>
@@ -105,9 +105,19 @@
 
             <!-- 右侧 30% -->
             <el-col :span="8">
-              <div class="right-section">
-                <div class="section-card" v-for="(image, index) in images" :key="`image-${index}`">
-                  <img :src="image" alt="展示图片" class="image-card" />
+              <div v-if="csvFileName!==''" class="right-section">
+                <div class="section-card">
+                  <span>是{{csv_type}}场景</span>
+                  <br><br>
+                  <span>包含{{num_rows}}用户数据</span>
+                  <br><br>
+                  <span>每位用户包含{{num_cols}}维初始特征</span>
+                </div>
+                <div class="section-card">
+                  <div ref="lineChart" id="line-chart" style="width: 100%; height: 400px; margin-top: 20px;"></div>
+                </div>
+                <div class="section-card">
+                  <div ref="scatterChart" id="scatter-chart" style="width: 100%; height: 400px; margin-top: 20px;"></div>
                 </div>
               </div>
             </el-col>
@@ -121,6 +131,16 @@
 
 <script>
 import logo from '@/assets/logo1.jpg'
+import mysql from '@/assets/mysql.png'
+import oracle from '@/assets/oracle.png'
+import postg from '@/assets/post.png'
+import wexin from '@/assets/wexin.png'
+import QQ from '@/assets/QQ.png'
+import zhifubao from '@/assets/img_3.png'
+import yunshanfu from '@/assets/onlinePay.png'
+import nongye from '@/assets/img_1.png'
+import gongshang from '@/assets/img_2.png'
+import * as echarts from "echarts";
 export default {
   name: 'upload',
   data () {
@@ -132,11 +152,37 @@ export default {
       tableData: [], // 表格数据
       tableColumns: [], // 表格列
       salesName: this.$cookie.get('name'), // 用户名
+      num_rows: '',
+      num_cols: '',
+      csv_type: '',
+      buttom_1: [
+        mysql,
+        oracle,
+        postg
+      ],
+      buttom_2: [
+        wexin,
+        QQ,
+        zhifubao
+      ],
+      buttom_3: [
+        yunshanfu,
+        nongye,
+        gongshang
+      ],
       images: [
         logo,
         logo,
         logo
       ],
+      chartData: {
+        x: [],
+        y: []
+      },
+      x_name: '',
+      y_name: '',
+      chartInstance: null,
+      chartInstance_2: null
     }
   },
   computed: {
@@ -147,6 +193,16 @@ export default {
   },
   methods: {
     // 处理 CSV 文件上传
+    resetChart() {
+      if (this.chartInstance) {
+        this.chartInstance.dispose(); // 切换页面时销毁图表
+        this.chartInstance = null;
+      }
+      if (this.chartInstance_2) {
+        this.chartInstance_2.dispose(); // 切换页面时销毁图表
+        this.chartInstance_2 = null;
+      }
+    },
     handleCsvUpload(file) {
       this.$message({
         message: `文件 ${file.name} 上传中...`,
@@ -157,7 +213,7 @@ export default {
       console.log(this.csvFileName)
       const formData = new FormData()
       if (this.csvFileName) {
-        formData.append('datasetLabelCsv', this.labelFileList[0])
+        formData.append('Csv', this.labelFileList[0])
         this.$message({
           message: `文件 ${this.csvFileName} 上传成功.`,
           type: "success",
@@ -165,7 +221,15 @@ export default {
         // const csvFile = this.$refs.csvUpload.files[0]
         // formData.append('datasetLabelCsv', csvFile)
       }
-      this.$axios.post('/csv/upload', formData).then(Response => {
+      this.$axios.post('/upload', formData).then(Response => {
+        this.num_rows = Response.data.num_rows
+        this.num_cols = Response.data.num_cols
+        this.csv_type = Response.data.csv_type
+        this.x_name = Response.data.x_name
+        this.y_name = Response.data.y_name
+        this.chartData = Response.data.data;
+        this.drawLineChart()
+        this.drawScatterChart()
         this.$message.success('上传成功');
       })
       // 停止文件自动上传
@@ -177,6 +241,80 @@ export default {
         type: "warning",
       });
     },
+    drawLineChart() {
+      if (!this.$refs.lineChart) return;
+      const chartDom = document.getElementById("line-chart");
+      if (!chartDom) {
+        console.error("line chart container not found!");
+        return;
+      }
+      console.log(1)
+      this.chartInstance = echarts.init(chartDom);
+      console.log(2)
+      console.log(this.chartData)
+      const options = {
+        title: {
+          text: "折线图"
+        },
+        tooltip: {
+          trigger: "axis"
+        },
+        xAxis: {
+          name: this.x_name, // X轴标签
+          nameLocation: 'end', // 标签位置，可选 'start', 'center', 'end'
+          type: 'value',
+          data: this.chartData.x
+        },
+        yAxis: {
+          name: this.y_name, // X轴标签
+          nameLocation: 'end', // 标签位置，可选 'start', 'center', 'end'
+          type: 'value'
+        },
+        series: [
+          {
+            data: this.chartData.y,
+            type: "line"
+          }
+        ]
+      };
+      this.chartInstance.setOption(options);
+    },
+    drawScatterChart() {
+      if (!this.$refs.scatterChart) return;
+      const chartDom = document.getElementById("scatter-chart");
+      if (!chartDom) {
+        console.error("scatter chart container not found!");
+        return;
+      }
+      console.log(1)
+      this.chartInstance_2 = echarts.init(chartDom);
+      const options = {
+        title: {
+          text: "散点图"
+        },
+        tooltip: {
+          trigger: "item"
+        },
+        xAxis: {
+          name: this.x_name, // X轴标签
+          nameLocation: 'end', // 标签位置，可选 'start', 'center', 'end'
+          type: 'value',
+          data: this.chartData.x
+        },
+        yAxis: {
+          name: this.y_name, // X轴标签
+          nameLocation: 'end', // 标签位置，可选 'start', 'center', 'end'
+          type: "value"
+        },
+        series: [
+          {
+            data: this.chartData.x.map((x, index) => [x, this.chartData.y[index]]),
+            type: "scatter"
+          }
+        ]
+      };
+      this.chartInstance_2.setOption(options);
+    }
   }
 }
 </script>

@@ -128,6 +128,7 @@ export default {
       },
       staff: [],
       code_url: '',
+      v_code: '',
       title: '用户登录'
     }
   },
@@ -136,43 +137,26 @@ export default {
   },
   methods: {
     login () {
+      if (this.loginForm.staffId === '' || this.loginForm.staffPassword === '' || this.loginForm.verifyCode === '') {
+        this.$message.error('请输入完整信息');
+        return
+      }
+      console.log(this.loginForm.verifyCode.toLowerCase())
+      console.log(this.v_code.toLowerCase())
+      if (this.loginForm.verifyCode.toLowerCase() !== this.v_code.toLowerCase()){
+        this.$message.error('验证码错误');
+        return;
+      }
       this.$cookie.set('name', '棒棒')
       this.$router.replace('/home')
-      // console.log(this.$store.state)
-      // this.$axios.post('/login', {staffId: this.loginForm.staffId, staffPassword: this.loginForm.staffPassword, verifyCode: this.loginForm.verifyCode}).then(response => {
-      // // Login(this.loginForm).then(response => {
-      //   if (response.data.code === 200) {
-      //     this.$router.replace({path: '/Boss'})
-      //     this.$axios.get('/staff/get?staffId=' + this.loginForm.staffId).then(response => {
-      //       this.staff = response.data
-      //       this.$store.commit('saveStaff_id', response.data.staffId)
-      //       this.$store.commit('saveStaff_name', response.data.staffName)
-      //       var path = this.$route.query.redirect
-      //       this.$router.replace({path: path === '/' || path === undefined ? '/login' : path})
-      //     })
-      //   }
-      //
-      //   if (response.data.code === 400 || response.data.code === 405) {
-      //     this.$message({
-      //       message: '登录失败：用户名或密码错误',
-      //       type: 'error'
-      //     })
-      //   }
-      //   if (response.data.code === 500) {
-      //     this.$message({
-      //       message: '登录失败，验证码错误',
-      //       type: 'error'
-      //     })
-      //   }
-      // }).catch(failResponse => {
-      // })
     },
     // 获取验证码
-    async getVertifyCode () {
-      // const { data: res } = await this.$http.get('/getVerifyCodeImage/?time=' + Math.random())
-      // // console.log(res)
-      // this.code_url = res // 验证码图片渲染
-    }
+    async getVertifyCode() {
+      console.log(1221313131)
+      const { data: res } = await this.$http.get('/getVerifyCodeImage')
+      this.code_url = 'data:image/png;base64,' + res.img // 验证码图片渲染
+      this.v_code = res.v_code
+    },
   },
   mounted: function () {
   }
@@ -211,8 +195,9 @@ export default {
     position: absolute; /* 使 logo 固定在页面左上角 */
     top: 20px;
     left: 20px;
+    z-index: -1;
     img {
-      width: 200px; /* 设置 logo 缩放 */
+      width: 150px; /* 设置 logo 缩放 */
       height: auto;
     }
   }

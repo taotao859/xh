@@ -31,8 +31,8 @@
         </el-row>
       </el-header>
       <template>
-        <el-main>
-          <el-card style="height: 100%" shadow="never">
+        <el-main style="overflow: hidden">
+          <el-card style="height: 100%; overflow-y:auto" shadow="never">
             <!-- 图片显示区 -->
             <div v-if="selectedNumber === null" class="image-grid">
               <el-row gutter="20">
@@ -74,9 +74,9 @@
                   <div ref="pieChart" id="pie-chart" style="width: 600px; height: 600px;"></div>
 
 <!--                  <div class="legend">-->
-<!--                    <p><span style="color: green;">●</span> 绿色：正常数据</p>-->
-<!--                    <p><span style="color: yellow;">●</span> 黄色：警告数据</p>-->
-<!--                    <p><span style="color: red;">●</span> 红色：异常数据</p>-->
+<!--                    <p><span style="color: #f5e694;">●</span> 绿色：正常数据</p>-->
+<!--                    <p><span style="color: #bcbbd0;">●</span> 黄色：警告数据</p>-->
+<!--                    <p><span style="color: #acd9ca;">●</span> 红色：异常数据</p>-->
 <!--                  </div>-->
                 </div>
               </div>
@@ -86,8 +86,8 @@
                 <div class="dialog-content">
                   <div class="left-table">
                     <el-table :data="featureData" border>
-                      <el-table-column prop="feature" label="特征" width="100"></el-table-column>
-                      <el-table-column prop="value" label="值" width="100"></el-table-column>
+                      <el-table-column prop="feature" label="特征" min-width="200px"></el-table-column>
+                      <el-table-column prop="value" label="值" min-width="200px"></el-table-column>
                     </el-table>
                   </div>
                   <div class="right-summary">
@@ -100,29 +100,15 @@
               <!-- 特征分析界面 -->
               <div v-if="activeTab === 'feature'" class="feature-analysis">
                 <div class="icon-section">
-                  <div class="feature-icon" @click="handleIconClick(1)">
-                    <i class="el-icon-money" style="color: #032262"><span style="margin-left: 10px;">特征1</span></i>
-                  </div>
-                  <div class="feature-icon" @click="handleIconClick(2)">
-                    <i class="el-icon-school" style="color: #032262"><span style="margin-left: 10px;">特征2</span></i>
-                  </div>
-                  <div class="feature-icon" @click="handleIconClick(3)">
-                    <i class="el-icon-wallet" style="color: #032262"><span style="margin-left: 10px;">特征3</span></i>
-                  </div>
-                  <div class="feature-icon" @click="handleIconClick(4)">
-                    <i class="el-icon-bank-card" style="color: #032262"><span style="margin-left: 10px;">特征4</span></i>
-                  </div>
-                  <div class="feature-icon" @click="handleIconClick(5)">
-                    <i class="el-icon-chat-round" style="color: #032262"><span style="margin-left: 10px;">特征5</span></i>
-                  </div>
-                  <div class="feature-icon" @click="handleIconClick(6)">
-                    <i class="el-icon-location-information" style="color: #032262"><span style="margin-left: 10px;">特征6</span></i>
-                  </div>
-                  <div class="feature-icon" @click="handleIconClick(7)">
-                    <i class="el-icon-service" style="color: #032262"><span style="margin-left: 10px;">特征7</span></i>
-                  </div>
-                  <div class="feature-icon" @click="handleIconClick(8)">
-                    <i class="el-icon-view" style="color: #032262"><span style="margin-left: 10px;">特征8</span></i>
+                  <div
+                    class="feature-icon"
+                    v-for="(feature, index) in features"
+                    :key="index"
+                    @click="handleIconClick(feature.label)"
+                  >
+                    <i :class="feature.iconClass" style="color: #032262">
+                      <span style="margin-left: 10px;">{{ feature.label }}</span>
+                    </i>
                   </div>
                 </div>
 
@@ -177,21 +163,49 @@ export default {
       no_show: no_show,
       searchQuery: "",
       showDialog: false,
-      featureData: [
-        { feature: "特征1", value: "值1" },
-        { feature: "特征2", value: "值2" },
-      ],
+      featureData: [],
       shareProbability: "85%",
       userVerdict: "高风险",
       selectedFeature: null,
       chartButtons: [
-        { type: "line", label: "折线图" },
-        { type: "bar", label: "柱状图" },
-        { type: "pie", label: "饼状图" },
+        { type: "line", label: "概率密度图" },
+        { type: "bar", label: "直方图" },
+        { type: "scatter", label: "散点图" },
       ],
       chartType: "line",
       chartInstance: null, // 保存 ECharts 实例
-      chartInstance_feature: null
+      chartInstance_feature: null,
+      features: [
+        { label: '特征1', iconClass: 'el-icon-money' },
+        { label: '特征2', iconClass: 'el-icon-school' },
+        { label: '特征3', iconClass: 'el-icon-wallet' },
+        { label: '特征4', iconClass: 'el-icon-bank-card' },
+        { label: '特征5', iconClass: 'el-icon-chat-round' },
+        { label: '特征6', iconClass: 'el-icon-location-information' },
+        { label: '特征7', iconClass: 'el-icon-service' },
+        { label: '特征8', iconClass: 'el-icon-view' },
+      ],
+      iconClass_list: [
+        'el-icon-money',
+        'el-icon-school',
+        'el-icon-wallet',
+        'el-icon-bank-card',
+        'el-icon-chat-round',
+        'el-icon-location-information',
+        'el-icon-service',
+        'el-icon-view'
+      ],
+      color_list: [
+        "#acd9ca",
+        "#f5e694",
+        "#bcbbd0"
+      ],
+      legend_data: [],
+      data: [],
+      data_destiny: [],
+      name_list: [],
+      result: [],
+      result_list: []
     }
   },
   watch: {
@@ -214,21 +228,64 @@ export default {
     if (this.selectedNumber === '' || this.selectedNumber === undefined){
       this.selectedNumber = null
       this.selectedFeature = null
+    } else if ( this.activeTab === 'result') {
+      if (this.selectedNumber === 1){
+        this.$nextTick(() => {
+            this.$axios.post('/upload_black_money', {}).then(Response => {
+              this.name_list = Response.data.name_list
+              this.data = Response.data.data
+              this.result = Response.data.result
+              this.legend_result = Response.data.legend_result
+              this.result_list = Response.data.result_list
+              this.data_destiny = Response.data.data_destiny
+              let feature_result = []
+              for (let i = 0; i < this.name_list.length; i++) {
+                console.log(this.name_list[i]);
+                feature_result.push({ label: this.name_list[i], iconClass: this.iconClass_list[i] },)
+              }
+              this.features = feature_result
+            })
+            this.initPieChart(this.data, this.legend_result);
+          }
+        )}
+      else {
+        this.$message({
+          message: "功能未开放",
+          type: "warning",
+        });
+      }
     }
   },
   methods: {
     handleImageClick(number) {
-      this.selectedNumber = number; // 设置当前点击的数字
+
       if (this.activeTab === 'result') {
-        this.$nextTick(() => {
-          const data = [
-            { value: 100*number+10, name: "正常数据", itemStyle: { color: "green" } },
-            { value: 30*number-10, name: "警告数据", itemStyle: { color: "yellow" } },
-            { value: 10*number+25, name: "异常数据", itemStyle: { color: "red" } },
-          ]
-          const legend_data = ['正常数据', '警告数据', '异常数据']
-          this.initPieChart(data, legend_data);
-        });
+        if (number === 1){
+          this.$nextTick(() => {
+            this.$axios.post('/upload_black_money', {}).then(Response => {
+              this.name_list = Response.data.name_list
+              this.data = Response.data.data
+              this.result = Response.data.result
+              this.legend_result = Response.data.legend_result
+              this.result_list = Response.data.result_list
+              this.data_destiny = Response.data.data_destiny
+              let feature_result = []
+              for (let i = 0; i < this.name_list.length; i++) {
+                console.log(this.name_list[i]);
+                feature_result.push({ label: this.name_list[i], iconClass: this.iconClass_list[i] },)
+              }
+              this.features = feature_result
+              this.initPieChart(this.result, this.legend_result);
+            })
+            this.selectedNumber = number; // 设置当前点击的数字
+          }
+        )}
+        else {
+          this.$message({
+            message: "功能未开放",
+            type: "warning",
+          });
+        }
       }
     },
     resetView() {
@@ -241,27 +298,28 @@ export default {
       this.searchQuery = ''
       if (this.activeTab === 'result') {
         this.$nextTick(() => {
-          const data = [
-            { value: 100*this.selectedNumber+10, name: "正常数据", itemStyle: { color: "green" } },
-            { value: 30*this.selectedNumber-10, name: "警告数据", itemStyle: { color: "yellow" } },
-            { value: 10*this.selectedNumber+25, name: "异常数据", itemStyle: { color: "red" } },
-          ]
-          const legend_data = ['正常数据', '警告数据', '异常数据']
-          this.initPieChart(data, legend_data);
+          this.initPieChart(this.result, this.legend_result);
         });
       }
     },
     handleSearch() {
       this.showDialog = true;
-      this.featureData = [
-        { feature: "特征1", value: "值1" },
-        { feature: "特征2", value: "值2" },
-      ]
-      this.shareProbability = "85%"
-      this.userVerdict = "高风险"
+      this.$axios.post('/search_feature', this.$qs.stringify({id: this.searchQuery, number: this.selectedNumber})).then(Response => {
+        if (Response.data.code === 206){
+          this.$message({
+            message: Response.data.mes,
+            type: "warning",
+          });
+          return
+        }
+        this.featureData = Response.data.feature_list
+        this.shareProbability = Response.data.class_value
+        this.userVerdict = Response.data.class_type
+      })
+
     },
-    handleIconClick(index) {
-      this.selectedFeature = index;
+    handleIconClick(label) {
+      this.selectedFeature = label;
       this.updateChart();
     },
     setChartType(type) {
@@ -271,24 +329,26 @@ export default {
         this.chartInstance_feature = null;
       }
       this.$nextTick(() => {
-        if (this.chartType === 'pie'){
+        if (this.chartType === 'line'){
           console.log(6)
-          const data = [
-            { value: 100*this.selectedNumber+10+70*this.selectedFeature, name: "正常数据", itemStyle: { color: "green" } },
-            { value: 30*this.selectedNumber-10+30*this.selectedFeature, name: "警告数据", itemStyle: { color: "yellow" } },
-            { value: 10*this.selectedNumber+15+10*this.selectedFeature, name: "异常数据", itemStyle: { color: "red" } },
-          ]
-          const legend_data = ['正常数据', '警告数据', '异常数据']
-          this.updateChart(data, legend_data);
+          const x = this.data_destiny[this.selectedFeature].x
+          console.log(x)
+          const y = this.data_destiny[this.selectedFeature].y
+          const data = x.map((xi, idx) => [xi, y[idx]]);
+          this.updateChart(data, []);
         } else {
           console.log(5)
-          const data = [
-            100*this.selectedNumber+10+70*this.selectedFeature,
-            30*this.selectedNumber-10+30*this.selectedFeature,
-            10*this.selectedNumber+15+10*this.selectedFeature,
-          ]
-          const legend_data = ['正常数据', '警告数据', '异常数据']
-          this.updateChart(data, legend_data);
+          if (this.chartType === 'bar') {
+            const data = this.data[this.selectedFeature].reduce((acc, value) => {
+              const bin = Math.floor(value);
+              acc[bin] = (acc[bin] || 0) + 1;
+              return acc;
+            }, [])
+            this.updateChart(data, []);
+          } else if (this.chartType === 'scatter') {
+            const data = this.result_list.map((x, index) => [x, this.data[this.selectedFeature][index]])
+            this.updateChart(data, []);
+          }
         }
       });
     },
@@ -316,7 +376,6 @@ export default {
           },
           xAxis: {
             type: 'category', // 设置为类别轴
-            data: legend_data // x 轴的数据
           },
           yAxis: {
             type: 'value' // 设置为数值轴

@@ -15,6 +15,7 @@ import * as echarts from 'echarts';
 
 axios.defaults.baseURL = 'http://localhost:8443/api'
 Vue.prototype.$axios = axios
+Vue.prototype.$http = axios
 Vue.prototype.$qs = qs
 Vue.config.productionTip = false
 
