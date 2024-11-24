@@ -14,10 +14,10 @@
         <el-menu-item index="/agent">
           <i class="el-icon-s-comment" style="color: white"></i>
         </el-menu-item>
-        <el-menu-item index="/mlmodel" @click="resetView">
+        <el-menu-item index="/mlmodel" >
           <i class="el-icon-data-line" style="color: white"></i>
         </el-menu-item>
-        <el-menu-item index="/telecom">
+        <el-menu-item index="/telecom" @click="resetView">
           <i class="el-icon-phone" style="color: white"></i>
         </el-menu-item>
       </el-menu>
@@ -38,21 +38,24 @@
           <el-card style="height: 100%; overflow-y:auto" shadow="never">
             <el-row style="margin-bottom: 10px;" align="middle">
               <el-col :span="4" style="text-align: left;">
-                <h2 style="margin: 0;">ML模型</h2>
+                <h2 style="margin: 0;">电信欺诈检测</h2>
               </el-col>
             </el-row>
             <!-- 图片显示区 -->
-            <div v-if="selectedNumber === null" class="image-grid">
+            <div v-if="selectedNumber === null && images.length > 1" class="image-grid">
               <el-row gutter="20">
                 <el-col :span="12" v-for="(image, index) in images" :key="index">
                   <img
                     :src="image"
                     alt="图片"
                     class="grid-image"
-                    @click="handleImageClick(index + 1)"
+                    @click="handleImageClick(index + 7)"
                   />
                 </el-col>
               </el-row>
+            </div>
+            <div v-if="selectedNumber === null && images.length === 1" class="single-image-container">
+              <img :src="images[0]" alt="图片" class="single-image" @click="handleImageClick(7)"/>
             </div>
 
             <!-- 主界面 -->
@@ -149,21 +152,18 @@ import logo from '@/assets/logo1.jpg'
 import image1 from '@/assets/1.png'
 import image2 from '@/assets/2.png'
 import image3 from '@/assets/3.png'
-import image4 from '@/assets/img_5.png'
+import image4 from '@/assets/4.png'
 import no_show from '@/assets/img.png'
 import {data} from "autoprefixer";
 
 export default {
-  name: 'mlmodel',
+  name: 'telecom',
   data() {
     return {
       logo: logo,
       pageName: 'ML模型',
       salesName: this.$cookie.get('name'),
       images: [
-        image1, // 替换为实际图片路径
-        image2,
-        image3,
         image4,
       ],
       selectedNumber: null, // 用于记录点击后显示的数字
@@ -237,15 +237,21 @@ export default {
       this.selectedNumber = null
       this.selectedFeature = null
     } else  {
+      console.log("selected")
+      console.log(this.selectedNumber)
       this.handleImageClick(this.selectedNumber)
-
     }
   },
   methods: {
     handleImageClick(number) {
       this.activeTab = 'result'
       if (this.activeTab === 'result') {
-        if (number !== 4){
+        console.log("number")
+        console.log(number)
+
+        if (number === 7 || number === '7'){
+          console.log("in")
+          console.log(number)
           this.$nextTick(() => {
             this.$axios.post('/upload_black_money', this.$qs.stringify({number: number})).then(Response => {
               this.name_list = Response.data.name_list
@@ -529,7 +535,23 @@ export default {
 .grid-image:hover {
   transform: scale(1.05);
 }
+.single-image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.single-image {
+  width: 80%;
+  height: 80%;
+  object-fit: cover; /* 确保图片按比例填充，不拉伸 */
+  border-radius: 8px; /* 可选：为图片添加圆角 */
+}
+.single-image:hover {
+  transform: scale(1.05);
+}
 .header-buttons {
   display: flex;
   gap: 10px;
