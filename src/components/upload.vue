@@ -17,6 +17,9 @@
         <el-menu-item index="/mlmodel">
           <i class="el-icon-data-line" style="color: white"></i>
         </el-menu-item>
+        <el-menu-item index="/telecom">
+          <i class="el-icon-phone" style="color: white"></i>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>

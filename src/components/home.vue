@@ -17,6 +17,10 @@
         <el-menu-item index="/mlmodel">
           <i class="el-icon-data-line" style="color: white"></i>
         </el-menu-item>
+
+        <el-menu-item index="/telecom">
+          <i class="el-icon-phone" style="color: white"></i>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
@@ -65,21 +69,26 @@
                 <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small_top top_small"><div style="margin-top: 35px">洗钱欺诈</div></div>
               </div>
-              <div class="cube_small blue" @click="handleClick('4')" style="z-index: 6; margin-left: -20px; margin-top: -50px">
+              <div class="cube_small blue" @click="handleClick('7')" style="z-index: 6; margin-left: -20px; margin-top: -50px">
                 <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small_top top_small"><div style="margin-top: 35px">ATO欺诈</div></div>
               </div>
 
             </div>
+            <div class="cube yellow" @click="handleClick('7')"  style="z-index: 5;margin-top: -100px;margin-left: 50px">
+              <div class="face front"><div style="margin-top: -17.5px">电信欺诈检测</div></div>
+              <div class="face left"><div style="margin-top: -17.5px"></div></div>
+              <div class="face_top top"><div style="margin-top: 125px"></div></div>
+            </div>
             <!-- 中层 -->
-            <div class="cube green" @click="handleClick('5')"  style="z-index: 5;margin-top: -100px;margin-left: 50px">
+            <div class="cube green" @click="handleClick('5')"  style="z-index: 4;margin-left: 50px">
               <div class="face front"><div style="margin-top: -17.5px">大模型agent对话</div></div>
               <div class="face left"><div style="margin-top: -17.5px"></div></div>
               <div class="face_top top"><div style="margin-top: 125px"></div></div>
             </div>
             <!-- 顶层 -->
-            <div class="cube gray" @click="handleClick('6')"  style="z-index: 4;margin-left: 50px">
+            <div class="cube gray" @click="handleClick('6')"  style="z-index: 3;margin-left: 50px">
               <div class="face front"><div style="margin-top: -17.5px">数据上传与分析</div></div>
               <div class="face left"><div style="margin-top: -17.5px"></div></div>
               <div class="face_top top"><div style="margin-top: 125px"></div></div>
@@ -150,6 +159,10 @@ export default {
       if (label === '6') {
         this.$router.push({ path: '/upload'})
       }
+      if (label === '7') {
+        const params = { id: 7 }
+        this.$router.push({ path: '/telecom', query: params })
+      }
     },
 
   }
@@ -216,11 +229,10 @@ export default {
 }
 .cube:hover {
   transform: rotateX(-30deg) rotateY(30deg) scale(1.2);
-  //box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
-.blue .face {
-  background-color: #add8e6;
+.yellow .face {
+  background-color: #f5e694;
 }
 .green .face {
   background-color: #a8d5ba;
@@ -228,8 +240,8 @@ export default {
 .gray .face {
   background-color: #d3d3d3;
 }
-.blue .face_top {
-  background-color: #add8e6;
+.yellow .face_top {
+  background-color: #f5e694;
 }
 .green .face_top {
   background-color: #a8d5ba;
@@ -278,7 +290,6 @@ export default {
 }
 .cube_small:hover {
   transform: rotateX(-30deg) rotateY(30deg) scale(1.2);
-  //box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
 .blue .face_small {
