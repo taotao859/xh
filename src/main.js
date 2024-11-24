@@ -13,7 +13,8 @@ import * as echarts from 'echarts';
 
 // 引入vuex-store
 
-axios.defaults.baseURL = 'http://localhost:8443/api'
+// axios.defaults.baseURL = 'http://localhost:8443/api'
+axios.defaults.baseURL = 'http://xhbackend.natapp1.cc/api'
 Vue.prototype.$axios = axios
 Vue.prototype.$http = axios
 Vue.prototype.$qs = qs
