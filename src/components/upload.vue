@@ -20,6 +20,9 @@
         <el-menu-item index="/telecom">
           <i class="el-icon-phone" style="color: white"></i>
         </el-menu-item>
+        <el-menu-item index="/ATO">
+          <i class="el-icon-s-check" style="color: white"></i>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
@@ -108,6 +111,16 @@
 
             <!-- 右侧 30% -->
             <el-col :span="8">
+              <div v-if="csvFileName===''" class="right-section">
+                <div style="
+                  background-color: #f5f5f5;
+                  height: calc(100vh - 325px);
+                  border-radius: 10px;
+                  padding: 20px;
+                  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);"
+                >
+                </div>
+              </div>
               <div v-if="csvFileName!==''" class="right-section">
                 <div class="section-card">
                 <div class="overview-container">

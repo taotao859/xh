@@ -20,6 +20,9 @@
         <el-menu-item index="/telecom">
           <i class="el-icon-phone" style="color: white"></i>
         </el-menu-item>
+        <el-menu-item index="/ATO">
+          <i class="el-icon-s-check" style="color: white"></i>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
@@ -44,7 +47,7 @@
           <!-- 标题 -->
           <el-row style="margin-bottom: 20px;" align="middle">
             <el-col :span="24" style="text-align: left;">
-              <h2 style="margin: 0;">大模型 Agent 对话</h2>
+              <h2 style="margin: 0;">智驭风控AI —— 大模型风险决策助手</h2>
             </el-col>
           </el-row>
 
@@ -79,7 +82,7 @@
             style="
           flex: 1;
           display: flex;
-          max-height: calc(100vh - 300px);
+          max-height: calc(100vh - 150px);
           flex-direction: column;
           background-color: white;
           border: 1px solid #ebeef5;
@@ -103,7 +106,7 @@
                 :class="msg.role === 'user' ? 'user-box' : 'bot-box'"
               >
                 <div :class="{ 'name-box': msg.role === 'user', 'ai-box': msg.role === 'system' }">
-                  {{ msg.role === 'user' ? salesName : 'AI' }}
+                  {{ msg.role === 'user' ? "用户" : '智驭风控AI' }}
                 </div>
                 <div class="content-box" v-html="renderMarkdown(msg.content)"></div>
               </div>
@@ -299,7 +302,7 @@ export default {
 }
 
 .name-box {
-  min-width: 50px;
+  min-width: 100px;
   font-weight: bold;
   margin-right: 10px;
   text-align: right;
@@ -307,7 +310,7 @@ export default {
 }
 
 .ai-box {
-  min-width: 50px;
+  min-width: 100px;
   font-weight: bold;
   margin-right: 10px;
   text-align: right;
@@ -318,7 +321,7 @@ export default {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #dcdfe6;
-  max-width: 60%;
+  max-width: 85%;
   word-wrap: break-word;
   display: inline-block;
   background-color: #ffffff;

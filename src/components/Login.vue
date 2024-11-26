@@ -147,7 +147,7 @@ export default {
         this.$message.error('验证码错误');
         return;
       }
-      this.$cookie.set('name', '棒棒')
+      this.$cookie.set('name', this.loginForm.staffId)
       this.$router.replace('/home')
     },
     // 获取验证码

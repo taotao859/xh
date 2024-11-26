@@ -20,6 +20,9 @@
         <el-menu-item index="/telecom" @click="resetView">
           <i class="el-icon-phone" style="color: white"></i>
         </el-menu-item>
+        <el-menu-item index="/ATO">
+          <i class="el-icon-s-check" style="color: white"></i>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
@@ -45,17 +48,32 @@
             <div v-if="selectedNumber === null && images.length > 1" class="image-grid">
               <el-row gutter="20">
                 <el-col :span="12" v-for="(image, index) in images" :key="index">
-                  <img
-                    :src="image"
-                    alt="图片"
-                    class="grid-image"
-                    @click="handleImageClick(index + 7)"
-                  />
+                  <div class="image-wrapper">
+                    <!-- 显示图片 -->
+                    <img
+                      :src="image"
+                      alt="图片"
+                      class="grid-image"
+                      @click="handleImageClick(index + 7)"
+                    />
+                    <!-- 图片下方的描述 -->
+                    <div class="image-description">
+                      {{ descriptions[index] }}
+                    </div>
+                  </div>
                 </el-col>
               </el-row>
             </div>
             <div v-if="selectedNumber === null && images.length === 1" class="single-image-container">
-              <img :src="images[0]" alt="图片" class="single-image" @click="handleImageClick(7)"/>
+              <div class="image-wrapper">
+                <!-- 显示图片 -->
+                <img :src="images[0]" alt="图片" class="single-image" @click="handleImageClick(7)"/>
+                <!-- 图片下方的描述 -->
+                <div class="image-description">
+                  <b><p :style="{ fontSize: '30px' }">{{titles[0]}}</p></b>
+                  {{ descriptions[0] }}
+                </div>
+              </div>
             </div>
 
             <!-- 主界面 -->
@@ -149,10 +167,7 @@
 <script>
 import * as echarts from 'echarts';
 import logo from '@/assets/logo1.jpg'
-import image1 from '@/assets/1.png'
-import image2 from '@/assets/2.png'
-import image3 from '@/assets/3.png'
-import image4 from '@/assets/4.png'
+import image4 from '@/assets/7.png'
 import no_show from '@/assets/img.png'
 import {data} from "autoprefixer";
 
@@ -207,6 +222,12 @@ export default {
         "#acd9ca",
         "#f5e694",
         "#bcbbd0"
+      ],
+      titles: [
+        "电话欺诈检测子模块",
+      ],
+      descriptions: [
+        "电信欺诈是指通过电话、短信等方式，编造虚假信息、设置骗局，对受害人实施远程、非接触式诈骗的非法行为。电话欺诈检测子模块提供数据上传、欺诈行为模式分析、欺诈用户检测和欺诈数据结果分析功能。",
       ],
       legend_data: [],
       data: [],
@@ -554,7 +575,21 @@ export default {
   flex-wrap: wrap;
   gap: 20px;
 }
+.image-wrapper {
+  width: 100%;
+  height: 100%;
+  text-align: center; /* 让图片和描述都居中 */
+}
 
+.image-description {
+  width: 60%;
+  align-items: center;
+  margin-top: 10px;  /* 给描述添加一些间距 */
+  margin-left: 20%;
+  margin-right: 20%;
+  font-size: 14px;   /* 设置描述字体大小 */
+  color: #666;       /* 设置描述字体颜色 */
+}
 .grid-image {
   width: 100%;
   object-fit: cover;

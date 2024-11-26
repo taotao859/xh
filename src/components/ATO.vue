@@ -14,10 +14,10 @@
         <el-menu-item index="/agent">
           <i class="el-icon-s-comment" style="color: white"></i>
         </el-menu-item>
-        <el-menu-item index="/mlmodel" @click="resetView">
+        <el-menu-item index="/mlmodel" >
           <i class="el-icon-data-line" style="color: white"></i>
         </el-menu-item>
-        <el-menu-item index="/telecom">
+        <el-menu-item index="/telecom" @click="resetView">
           <i class="el-icon-phone" style="color: white"></i>
         </el-menu-item>
         <el-menu-item index="/ATO">
@@ -41,11 +41,11 @@
           <el-card style="height: 100%; overflow-y:auto" shadow="never">
             <el-row style="margin-bottom: 10px;" align="middle">
               <el-col :span="4" style="text-align: left;">
-                <h2 style="margin: 0;">ML模型</h2>
+                <h2 style="margin: 0;">ATO欺诈检测</h2>
               </el-col>
             </el-row>
             <!-- 图片显示区 -->
-            <div v-if="selectedNumber === null" class="image-grid">
+            <div v-if="selectedNumber === null && images.length > 1" class="image-grid">
               <el-row gutter="20">
                 <el-col :span="12" v-for="(image, index) in images" :key="index">
                   <div class="image-wrapper">
@@ -54,16 +54,28 @@
                       :src="image"
                       alt="图片"
                       class="grid-image"
-                      @click="handleImageClick(index + 1)"
+                      @click="handleImageClick(index + 4)"
                     />
                     <!-- 图片下方的描述 -->
-                    <div class="image-description_2">
-                      <b><p :style="{ fontSize: '30px' }">{{titles[index]}}</p></b>
-                      {{ descriptions[index] }}
+                    <div class="image-description">
+                      <b><p :style="{ fontSize: '30px' }">{{titles[0]}}</p></b>
+                      {{ descriptions[0] }}
                     </div>
                   </div>
                 </el-col>
               </el-row>
+            </div>
+            <div v-if="selectedNumber === null && images.length === 1" class="single-image-container">
+              <div class="image-wrapper">
+                <!-- 显示图片 -->
+                <img :src="images[0]" alt="图片" class="single-image" @click="handleImageClick(4)"/>
+                <!-- 图片下方的描述 -->
+                <div class="image-description">
+                  <b><p :style="{ fontSize: '30px' }">{{titles[0]}}</p></b>
+                  {{ descriptions[0] }}
+                </div>
+              </div>
+
             </div>
 
             <!-- 主界面 -->
@@ -134,7 +146,7 @@
                 <div class="chart-section_2">
                   <div v-if="selectedFeature" class="left-buttons">
                     <div style="height: 0; visibility: hidden;"></div>
-                    <el-button style="margin: 0;padding: 10px;height: 25%;background: linear-gradient(#ade8f4, #f0f9ff, #ade8f4);" v-for="(btn, index) in chartButtons" :key="index" @click="setChartType(btn.type)">
+                    <el-button style="margin: 0;padding: 10px;" v-for="(btn, index) in chartButtons" :key="index" @click="setChartType(btn.type)">
                       {{ btn.label }}
                     </el-button>
                   </div>
@@ -157,24 +169,19 @@
 <script>
 import * as echarts from 'echarts';
 import logo from '@/assets/logo1.jpg'
-import image1 from '@/assets/1.png'
-import image2 from '@/assets/2.png'
-import image3 from '@/assets/3.png'
-import image4 from '@/assets/img_5.png'
+import image4 from '@/assets/4.png'
 import no_show from '@/assets/img.png'
 import {data} from "autoprefixer";
 
 export default {
-  name: 'mlmodel',
+  name: 'telecom',
   data() {
     return {
       logo: logo,
       pageName: 'ML模型',
       salesName: this.$cookie.get('name'),
       images: [
-        image1, // 替换为实际图片路径
-        image2,
-        image3,
+        image4,
       ],
       selectedNumber: null, // 用于记录点击后显示的数字
       activeTab: "result", // 当前激活的页面
@@ -218,22 +225,18 @@ export default {
         "#f5e694",
         "#bcbbd0"
       ],
+      titles: [
+        "账户接管欺诈检测子模块",
+      ],
+      descriptions: [
+        "账户接管欺诈检测子模块提供用户身份认证和设备行为管控两大核心功能，运用先进智能技术深入分析用户的多元特征数据，精准识别用户身份，并严密监控设备的异常行为，为个人及组织的设备数据安全与隐私筑起坚实的防线。",
+      ],
       legend_data: [],
       data: [],
       data_destiny: [],
       name_list: [],
       result: [],
-      result_list: [],
-      titles: [
-        "信贷欺诈账户检测子模块",
-        "洗钱账户检测子模块",
-        "信用卡欺诈检测子模块",
-      ],
-      descriptions: [
-        "信贷欺诈账户检测子模块主要应用于贷款申请审核、贷后风险管理、不良资产处置等环节。包含数据提交、欺诈模式识别、欺诈用户筛查及结果分析等功能。",
-        "洗钱账户检测子模块主要应用于账户交易监控、客户身份识别、可疑交易报告等环节。具备数据提交、欺诈模式识别、欺诈用户筛查及欺诈分析结果展示等功能。",
-        "信用卡欺诈检测子模块广泛应用于日常交易监控、风险预警、客户身份验证等多个环节。提供数据上传、欺诈行为模式分析、欺诈用户检测和欺诈数据结果分析功能。",
-      ]
+      result_list: []
     }
   },
   watch: {
@@ -257,15 +260,21 @@ export default {
       this.selectedNumber = null
       this.selectedFeature = null
     } else  {
+      console.log("selected")
+      console.log(this.selectedNumber)
       this.handleImageClick(this.selectedNumber)
-
     }
   },
   methods: {
     handleImageClick(number) {
       this.activeTab = 'result'
       if (this.activeTab === 'result') {
-        if (number !== 4){
+        console.log("number")
+        console.log(number)
+
+        if (number === 7 || number === '7'){
+          console.log("in")
+          console.log(number)
           this.$nextTick(() => {
             this.$axios.post('/upload_black_money', this.$qs.stringify({number: number})).then(Response => {
               this.name_list = Response.data.name_list
@@ -340,10 +349,8 @@ export default {
 
     },
     handleIconClick(label) {
-      if (this.selectedFeature !== label) {
-        this.selectedFeature = label;
-        this.updateChart();
-      }
+      this.selectedFeature = label;
+      this.updateChart();
     },
     setChartType(type) {
       this.chartType = type;
@@ -390,11 +397,8 @@ export default {
         console.log(7)
         const options = {
           title: {
-            text: this.selectedFeature,
+            text: "数据分布",
             left: "center",
-            textStyle: {
-              fontSize: 30  // 设置提示框字体大小
-            }
           },
           tooltip: {
             trigger: "item",
@@ -402,15 +406,9 @@ export default {
           },
           xAxis: {
             type: 'category', // 设置为类别轴
-            textStyle: {
-              fontSize: 24  // 设置提示框字体大小
-            }
           },
           yAxis: {
-            type: 'value', // 设置为数值轴
-            textStyle: {
-              fontSize: 24  // 设置提示框字体大小
-            }
+            type: 'value' // 设置为数值轴
           },
           series: [
             {
@@ -425,11 +423,8 @@ export default {
         console.log(9)
         const option = {
           title: {
-            text: this.selectedFeature,
+            text: "数据分布",
             left: "center",
-            textStyle: {
-              fontSize: 30  // 设置提示框字体大小
-            }
           },
           tooltip: {
             trigger: "item",
@@ -439,19 +434,12 @@ export default {
             orient: 'vertical',
             bottom: "100",
             left: "right",
-            data: legend_data,
-            textStyle: {
-              fontSize: 24  // 设置提示框字体大小
-            }
+            data: legend_data
           },
           series: [
             {
               type: this.chartType,
-              data: data,
-              label: {
-                show: true, // 显示标签
-                fontSize: 24, // 设置标签字体大小
-              },
+              data: data
             },
           ],
         };
@@ -472,9 +460,6 @@ export default {
         title: {
           text: "数据分布",
           left: "center",
-          textStyle: {
-            fontSize: 30  // 设置提示框字体大小
-          }
         },
         tooltip: {
           trigger: "item",
@@ -484,10 +469,7 @@ export default {
           orient: 'vertical',
           bottom: "10",
           left: "center",
-          data: legend_data,
-          textStyle: {
-            fontSize: 24  // 设置提示框字体大小
-          }
+          data: legend_data
         },
         series: [
           {
@@ -495,10 +477,6 @@ export default {
             type: "pie",
             radius: "50%",
             data: data,
-            label: {
-              show: true, // 显示标签
-              fontSize: 24, // 设置标签字体大小
-            },
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
@@ -569,15 +547,17 @@ export default {
   gap: 20px;
 }
 .image-wrapper {
+  width: 100%;
+  height: 100%;
   text-align: center; /* 让图片和描述都居中 */
 }
 
-.image-description_2 {
-  width: 80%;
+.image-description {
+  width: 60%;
   align-items: center;
   margin-top: 10px;  /* 给描述添加一些间距 */
-  margin-left: 10%;
-  margin-right: 10%;
+  margin-left: 20%;
+  margin-right: 20%;
   font-size: 14px;   /* 设置描述字体大小 */
   color: #666;       /* 设置描述字体颜色 */
 }
@@ -592,7 +572,23 @@ export default {
 .grid-image:hover {
   transform: scale(1.05);
 }
+.single-image-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
+.single-image {
+  width: 80%;
+  height: 80%;
+  object-fit: cover; /* 确保图片按比例填充，不拉伸 */
+  border-radius: 8px; /* 可选：为图片添加圆角 */
+}
+.single-image:hover {
+  transform: scale(1.05);
+}
 .header-buttons {
   display: flex;
   gap: 10px;
