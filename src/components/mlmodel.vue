@@ -20,6 +20,9 @@
         <el-menu-item index="/telecom">
           <i class="el-icon-phone" style="color: white"></i>
         </el-menu-item>
+        <el-menu-item index="/ATO">
+          <i class="el-icon-s-check" style="color: white"></i>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
@@ -45,12 +48,20 @@
             <div v-if="selectedNumber === null" class="image-grid">
               <el-row gutter="20">
                 <el-col :span="12" v-for="(image, index) in images" :key="index">
-                  <img
-                    :src="image"
-                    alt="图片"
-                    class="grid-image"
-                    @click="handleImageClick(index + 1)"
-                  />
+                  <div class="image-wrapper">
+                    <!-- 显示图片 -->
+                    <img
+                      :src="image"
+                      alt="图片"
+                      class="grid-image"
+                      @click="handleImageClick(index + 1)"
+                    />
+                    <!-- 图片下方的描述 -->
+                    <div class="image-description_2">
+                      <b><p :style="{ fontSize: '30px' }">{{titles[index]}}</p></b>
+                      {{ descriptions[index] }}
+                    </div>
+                  </div>
                 </el-col>
               </el-row>
             </div>
@@ -164,7 +175,6 @@ export default {
         image1, // 替换为实际图片路径
         image2,
         image3,
-        image4,
       ],
       selectedNumber: null, // 用于记录点击后显示的数字
       activeTab: "result", // 当前激活的页面
@@ -213,7 +223,17 @@ export default {
       data_destiny: [],
       name_list: [],
       result: [],
-      result_list: []
+      result_list: [],
+      titles: [
+        "信贷欺诈账户检测子模块",
+        "洗钱账户检测子模块",
+        "信用卡欺诈检测子模块",
+      ],
+      descriptions: [
+        "信贷欺诈账户检测子模块主要应用于贷款申请审核、贷后风险管理、不良资产处置等环节。包含数据提交、欺诈模式识别、欺诈用户筛查及结果分析等功能。",
+        "洗钱账户检测子模块主要应用于账户交易监控、客户身份识别、可疑交易报告等环节。具备数据提交、欺诈模式识别、欺诈用户筛查及欺诈分析结果展示等功能。",
+        "信用卡欺诈检测子模块广泛应用于日常交易监控、风险预警、客户身份验证等多个环节。提供数据上传、欺诈行为模式分析、欺诈用户检测和欺诈数据结果分析功能。",
+      ]
     }
   },
   watch: {
@@ -517,7 +537,19 @@ export default {
   flex-wrap: wrap;
   gap: 20px;
 }
+.image-wrapper {
+  text-align: center; /* 让图片和描述都居中 */
+}
 
+.image-description_2 {
+  width: 80%;
+  align-items: center;
+  margin-top: 10px;  /* 给描述添加一些间距 */
+  margin-left: 10%;
+  margin-right: 10%;
+  font-size: 14px;   /* 设置描述字体大小 */
+  color: #666;       /* 设置描述字体颜色 */
+}
 .grid-image {
   width: 100%;
   object-fit: cover;
