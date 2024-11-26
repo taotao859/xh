@@ -326,8 +326,10 @@ export default {
 
     },
     handleIconClick(label) {
-      this.selectedFeature = label;
-      this.updateChart();
+      if (this.selectedFeature !== label) {
+        this.selectedFeature = label;
+        this.updateChart();
+      }
     },
     setChartType(type) {
       this.chartType = type;
@@ -374,8 +376,11 @@ export default {
         console.log(7)
         const options = {
           title: {
-            text: "数据分布",
+            text: this.selectedFeature,
             left: "center",
+            textStyle: {
+              fontSize: 30  // 设置提示框字体大小
+            }
           },
           tooltip: {
             trigger: "item",
@@ -383,9 +388,15 @@ export default {
           },
           xAxis: {
             type: 'category', // 设置为类别轴
+            textStyle: {
+              fontSize: 24  // 设置提示框字体大小
+            }
           },
           yAxis: {
-            type: 'value' // 设置为数值轴
+            type: 'value', // 设置为数值轴
+            textStyle: {
+              fontSize: 24  // 设置提示框字体大小
+            }
           },
           series: [
             {
@@ -400,8 +411,11 @@ export default {
         console.log(9)
         const option = {
           title: {
-            text: "数据分布",
+            text: this.selectedFeature,
             left: "center",
+            textStyle: {
+              fontSize: 30  // 设置提示框字体大小
+            }
           },
           tooltip: {
             trigger: "item",
@@ -411,12 +425,19 @@ export default {
             orient: 'vertical',
             bottom: "100",
             left: "right",
-            data: legend_data
+            data: legend_data,
+            textStyle: {
+              fontSize: 24  // 设置提示框字体大小
+            }
           },
           series: [
             {
               type: this.chartType,
-              data: data
+              data: data,
+              label: {
+                show: true, // 显示标签
+                fontSize: 24, // 设置标签字体大小
+              },
             },
           ],
         };
@@ -437,6 +458,9 @@ export default {
         title: {
           text: "数据分布",
           left: "center",
+          textStyle: {
+            fontSize: 30  // 设置提示框字体大小
+          }
         },
         tooltip: {
           trigger: "item",
@@ -446,7 +470,10 @@ export default {
           orient: 'vertical',
           bottom: "10",
           left: "center",
-          data: legend_data
+          data: legend_data,
+          textStyle: {
+            fontSize: 24  // 设置提示框字体大小
+          }
         },
         series: [
           {
@@ -454,6 +481,10 @@ export default {
             type: "pie",
             radius: "50%",
             data: data,
+            label: {
+              show: true, // 显示标签
+              fontSize: 24, // 设置标签字体大小
+            },
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,

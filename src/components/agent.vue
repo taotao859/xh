@@ -105,7 +105,7 @@
                 <div :class="{ 'name-box': msg.role === 'user', 'ai-box': msg.role === 'system' }">
                   {{ msg.role === 'user' ? salesName : 'AI' }}
                 </div>
-                <div class="content-box">{{ msg.content }}</div>
+                <div class="content-box" v-html="renderMarkdown(msg.content)"></div>
               </div>
             </div>
 
@@ -201,6 +201,17 @@ export default {
     this.disabled_info = false
   },
   methods: {
+    renderMarkdown(content) {
+      // 实现 Markdown 渲染逻辑
+      content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+      content = content.replace(/__(.+?)__/g, '<strong>$1</strong>');
+      content = content.replace(/\*(.+?)\*/g, '<em>$1</em>');
+      content = content.replace(/_(.+?)_/g, '<em>$1</em>');
+      content = content.replace(/\n/g, '<br />');
+      content = content.replace(/```([\s\S]+?)```/g, '<pre><code>$1</code></pre>');
+      content = content.replace(/`([^`]+)`/g, '<code>$1</code>');
+      return content;
+    },
     sendMessage() {
       if (this.userInput.trim()) {
         // 将用户消息添加到消息记录
@@ -225,7 +236,11 @@ export default {
     scrollToBottom() {
       this.$nextTick(() => {
         const container = this.$refs.messageList;
-        container.scrollTop = container.scrollHeight;
+        if (container) {
+          console.log(container.scrollHeight);
+          container.scrollTop = container.scrollHeight;
+        }
+
       });
     },
   }
