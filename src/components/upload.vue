@@ -123,11 +123,43 @@
               </div>
               <div v-if="csvFileName!==''" class="right-section">
                 <div class="section-card">
-                  <span>是{{csv_type}}场景</span>
-                  <br><br>
-                  <span>包含{{num_rows}}用户数据</span>
-                  <br><br>
-                  <span>每位用户包含{{num_cols}}维初始特征</span>
+                <div class="overview-container">
+                  <!-- 头部框 -->
+                  <el-row style="margin-bottom: 20px;" align="middle">
+                    <el-col :span="4" style="text-align: left;">
+                      <h3 style="margin-left: -65px;">概览</h3>
+                    </el-col>
+                  </el-row>
+                  <!-- 第一个矩形 -->
+                  <div class="section-card large-card">
+                    <div class="card-row">
+                      <span class="bold">{{ csv_type }}</span>
+                    </div>
+                    <div class="card-row">
+                      <span>欺诈场景类型</span>
+                    </div>
+                  </div>
+
+                  <!-- 第二个矩形 -->
+                  <div class="small-cards-container">
+                    <div class="section-card small-card">
+                      <div class="card-row">
+                        <span class="bold">{{ num_rows }}</span>
+                      </div>
+                      <div class="card-row">
+                        <span>用户数据数量</span>
+                      </div>
+                    </div>
+                    <div class="section-card small-card">
+                      <div class="card-row">
+                        <span class="bold">{{ num_cols }}</span>
+                      </div>
+                      <div class="card-row">
+                        <span>初始特征维度</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
                 </div>
                 <div class="section-card">
                   <div ref="lineChart" id="line-chart" style="width: 100%; height: 400px; margin-top: 20px;"></div>
@@ -443,6 +475,53 @@ export default {
   height: 200px;
   object-fit: cover;
   border-radius: 8px;
+}
+
+.overview-container {
+  padding: 20px;
+}
+
+.header-box {
+  background-color: #f0f8ff; /* 可以根据需要调整背景色 */
+  padding: 10px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.header-text {
+  font-size: 24px;
+  font-weight: bold;
+  color: #00237d; /* 蓝色字体 */
+}
+
+.section-card {
+  background-color: #f4f4f4;
+  border-radius: 12px;
+  padding: 15px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px;
+}
+
+.large-card {
+}
+
+.small-cards-container {
+  display: flex;
+  gap: 5%; /* 设置两个小矩形之间的间距 */
+  flex-wrap: wrap; /* 保证小矩形可以换行 */
+}
+
+.small-card {
+  width: 41%; /* 两个小矩形各占一半宽度 */
+}
+
+.card-row {
+  margin-bottom: 10px;
+}
+
+.bold {
+  font-size: 30px;
+  font-weight: bold;
 }
 </style>
 
