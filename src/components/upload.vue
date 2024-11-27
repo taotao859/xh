@@ -123,7 +123,7 @@
               </div>
               <div v-if="csvFileName!==''" class="right-section">
                 <div class="section-card">
-                <div class="overview-container">
+                <div v-if="csv_type!==''" class="overview-container">
                   <!-- 头部框 -->
                   <el-row style="margin-bottom: 20px;" align="middle">
                     <el-col :span="4" style="text-align: left;">
@@ -164,9 +164,9 @@
                 <div class="section-card">
                   <div ref="lineChart" id="line-chart" style="width: 100%; height: 400px; margin-top: 20px;"></div>
                 </div>
-                <div class="section-card">
-                  <div ref="scatterChart" id="scatter-chart" style="width: 100%; height: 400px; margin-top: 20px;"></div>
-                </div>
+<!--                <div class="section-card">-->
+<!--                  <div ref="scatterChart" id="scatter-chart" style="width: 100%; height: 400px; margin-top: 20px;"></div>-->
+<!--                </div>-->
               </div>
             </el-col>
           </el-row>
@@ -277,7 +277,7 @@ export default {
         this.y_name = Response.data.y_name
         this.chartData = Response.data.data;
         this.drawLineChart()
-        this.drawScatterChart()
+        // this.drawScatterChart()
         this.$message.success('上传成功');
       })
       // 停止文件自动上传
@@ -302,7 +302,7 @@ export default {
       console.log(this.chartData)
       const options = {
         title: {
-          text: "折线图"
+          text: "空值数量柱状图"
         },
         tooltip: {
           trigger: "axis"
@@ -310,7 +310,7 @@ export default {
         xAxis: {
           name: this.x_name, // X轴标签
           nameLocation: 'end', // 标签位置，可选 'start', 'center', 'end'
-          type: 'value',
+          type: 'category',
           data: this.chartData.x
         },
         yAxis: {
@@ -321,7 +321,7 @@ export default {
         series: [
           {
             data: this.chartData.y,
-            type: "line"
+            type: "bar"
           }
         ]
       };
