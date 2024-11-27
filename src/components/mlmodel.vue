@@ -41,7 +41,7 @@
           <el-card style="height: 100%; overflow-y:auto" shadow="never">
             <el-row style="margin-bottom: 10px;" align="middle">
               <el-col :span="4" style="text-align: left;">
-                <h2 style="margin: 0;">ML模型</h2>
+                <h2 style="margin: 0;">{{ pageName }}</h2>
               </el-col>
             </el-row>
             <!-- 图片显示区 -->
@@ -169,7 +169,7 @@ export default {
   data() {
     return {
       logo: logo,
-      pageName: 'ML模型',
+      pageName: '金融反欺诈场景',
       salesName: this.$cookie.get('name'),
       images: [
         image1, // 替换为实际图片路径
@@ -179,6 +179,7 @@ export default {
       selectedNumber: null, // 用于记录点击后显示的数字
       activeTab: "result", // 当前激活的页面
       no_show: no_show,
+
       searchQuery: "",
       showDialog: false,
       featureData: [],
@@ -252,6 +253,7 @@ export default {
   },
   computed: {},
   mounted: function () {
+    this.pageName = "金融反欺诈场景"
     this.selectedNumber = this.$route.query.id
     if (this.selectedNumber === '' || this.selectedNumber === undefined){
       this.selectedNumber = null
@@ -266,6 +268,15 @@ export default {
       this.activeTab = 'result'
       if (this.activeTab === 'result') {
         if (number !== 4){
+          if (number === 1) {
+            this.pageName = "信贷欺诈账户结果分析"
+          }
+          if (number === 2) {
+            this.pageName = "洗钱账户结果分析"
+          }
+          if (number === 3) {
+            this.pageName = "信用卡欺诈账户结果分析"
+          }
           this.$nextTick(() => {
             this.$axios.post('/upload_black_money', this.$qs.stringify({number: number})).then(Response => {
               this.name_list = Response.data.name_list
@@ -281,7 +292,9 @@ export default {
               }
               this.features = feature_result
               console.log(this.result, this.legend_result)
+
               this.initPieChart(this.result, this.legend_result);
+
             })
             this.selectedNumber = number; // 设置当前点击的数字
           }
@@ -295,6 +308,7 @@ export default {
       }
     },
     resetView() {
+      this.pageName = "金融反欺诈场景"
       this.selectedNumber = null; // 重置为图片显示状态
       this.selectedFeature = null;
       this.legend_data= [],
