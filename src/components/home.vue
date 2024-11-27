@@ -72,7 +72,7 @@
                 <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small_top top_small"><div style="margin-top: 35px">洗钱欺诈</div></div>
               </div>
-              <div class="cube_small blue" @click="handleClick('4')" style="z-index: 6; margin-left: -20px; margin-top: -50px">
+              <div class="cube_small blue" @click="handleClick('8')" style="z-index: 6; margin-left: -20px; margin-top: -50px">
                 <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small_top top_small"><div style="margin-top: 35px">ATO欺诈</div></div>
@@ -152,11 +152,13 @@ export default {
         const params = { id: 3 }
         this.$router.push({ path: '/mlmodel', query: params })
       }
-      if (label === '4') {
-        this.$message({
-          message: "功能未开放",
-          type: "warning",
-        });
+      if (label === '8') {
+        // this.$message({
+        //   message: "功能未开放",
+        //   type: "warning",
+        // });
+        const params = { id: 8 }
+        this.$router.push({ path: '/ATO', query: params })
       }
       if (label === '5') {
         this.$router.push({ path: '/agent' })

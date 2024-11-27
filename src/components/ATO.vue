@@ -54,7 +54,7 @@
                       :src="image"
                       alt="图片"
                       class="grid-image"
-                      @click="handleImageClick(index + 4)"
+                      @click="handleImageClick(index + 8)"
                     />
                     <!-- 图片下方的描述 -->
                     <div class="image-description">
@@ -68,7 +68,7 @@
             <div v-if="selectedNumber === null && images.length === 1" class="single-image-container">
               <div class="image-wrapper">
                 <!-- 显示图片 -->
-                <img :src="images[0]" alt="图片" class="single-image" @click="handleImageClick(4)"/>
+                <img :src="images[0]" alt="图片" class="single-image" @click="handleImageClick(8)"/>
                 <!-- 图片下方的描述 -->
                 <div class="image-description">
                   <b><p :style="{ fontSize: '30px' }">{{titles[0]}}</p></b>
@@ -146,7 +146,7 @@
                 <div class="chart-section_2">
                   <div v-if="selectedFeature" class="left-buttons">
                     <div style="height: 0; visibility: hidden;"></div>
-                    <el-button style="margin: 0;padding: 10px;" v-for="(btn, index) in chartButtons" :key="index" @click="setChartType(btn.type)">
+                    <el-button style="margin: 0;padding: 10px;height: 25%;background: linear-gradient(#ade8f4, #f0f9ff, #ade8f4);font-size: 30px" v-for="(btn, index) in chartButtons" :key="index" @click="setChartType(btn.type)">
                       {{ btn.label }}
                     </el-button>
                   </div>
@@ -272,7 +272,7 @@ export default {
         console.log("number")
         console.log(number)
 
-        if (number === 7 || number === '7'){
+        if (number === 8 || number === '8'){
           console.log("in")
           console.log(number)
           this.$nextTick(() => {
@@ -349,8 +349,10 @@ export default {
 
     },
     handleIconClick(label) {
-      this.selectedFeature = label;
-      this.updateChart();
+      if (this.selectedFeature !== label) {
+        this.selectedFeature = label;
+        this.updateChart();
+      }
     },
     setChartType(type) {
       this.chartType = type;
@@ -397,8 +399,11 @@ export default {
         console.log(7)
         const options = {
           title: {
-            text: "数据分布",
+            text: this.selectedFeature,
             left: "center",
+            textStyle: {
+              fontSize: 30  // 设置提示框字体大小
+            }
           },
           tooltip: {
             trigger: "item",
@@ -406,9 +411,15 @@ export default {
           },
           xAxis: {
             type: 'category', // 设置为类别轴
+            textStyle: {
+              fontSize: 24  // 设置提示框字体大小
+            }
           },
           yAxis: {
-            type: 'value' // 设置为数值轴
+            type: 'value', // 设置为数值轴
+            textStyle: {
+              fontSize: 24  // 设置提示框字体大小
+            }
           },
           series: [
             {
@@ -423,8 +434,11 @@ export default {
         console.log(9)
         const option = {
           title: {
-            text: "数据分布",
+            text: this.selectedFeature,
             left: "center",
+            textStyle: {
+              fontSize: 30  // 设置提示框字体大小
+            }
           },
           tooltip: {
             trigger: "item",
@@ -434,12 +448,19 @@ export default {
             orient: 'vertical',
             bottom: "100",
             left: "right",
-            data: legend_data
+            data: legend_data,
+            textStyle: {
+              fontSize: 24  // 设置提示框字体大小
+            }
           },
           series: [
             {
               type: this.chartType,
-              data: data
+              data: data,
+              label: {
+                show: true, // 显示标签
+                fontSize: 24, // 设置标签字体大小
+              },
             },
           ],
         };
@@ -460,6 +481,9 @@ export default {
         title: {
           text: "数据分布",
           left: "center",
+          textStyle: {
+            fontSize: 30  // 设置提示框字体大小
+          }
         },
         tooltip: {
           trigger: "item",
@@ -469,7 +493,10 @@ export default {
           orient: 'vertical',
           bottom: "10",
           left: "center",
-          data: legend_data
+          data: legend_data,
+          textStyle: {
+            fontSize: 24  // 设置提示框字体大小
+          }
         },
         series: [
           {
@@ -477,6 +504,10 @@ export default {
             type: "pie",
             radius: "50%",
             data: data,
+            label: {
+              show: true, // 显示标签
+              fontSize: 24, // 设置标签字体大小
+            },
             emphasis: {
               itemStyle: {
                 shadowBlur: 10,
