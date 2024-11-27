@@ -144,7 +144,7 @@
                 <div class="chart-section_2">
                   <div v-if="selectedFeature" class="left-buttons">
                     <div style="height: 0; visibility: hidden;"></div>
-                    <el-button style="margin: 0;padding: 10px;" v-for="(btn, index) in chartButtons" :key="index" @click="setChartType(btn.type)">
+                    <el-button style="margin: 0;padding: 10px;height: 25%;background: linear-gradient(#ade8f4, #f0f9ff, #ade8f4);font-size: 30px" v-for="(btn, index) in chartButtons" :key="index" @click="setChartType(btn.type)">
                       {{ btn.label }}
                     </el-button>
                   </div>
