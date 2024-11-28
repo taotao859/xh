@@ -7,6 +7,7 @@ import agent from "../components/agent.vue";
 import home from "../components/home.vue";
 import test from "../components/test.vue";
 import telecom from "../components/telecom.vue";
+import ATO from "../components/ATO.vue";
 
 Vue.use(Router)
 
@@ -46,6 +47,11 @@ export default new Router({
       path: '/telecom',
       name: 'telecom',
       component: telecom
+    },
+    {
+      path: '/ATO',
+      name: 'ATO',
+      component: ATO
     }
   ]
 })

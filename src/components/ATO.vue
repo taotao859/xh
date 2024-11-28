@@ -41,7 +41,7 @@
           <el-card style="height: 100%; overflow-y:auto" shadow="never">
             <el-row style="margin-bottom: 10px;" align="middle">
               <el-col :span="4" style="text-align: left;">
-                <h2 style="margin: 0;">电信欺诈检测</h2>
+                <h2 style="margin: 0;">ATO欺诈检测</h2>
               </el-col>
             </el-row>
             <!-- 图片显示区 -->
@@ -54,11 +54,12 @@
                       :src="image"
                       alt="图片"
                       class="grid-image"
-                      @click="handleImageClick(index + 7)"
+                      @click="handleImageClick(index + 8)"
                     />
                     <!-- 图片下方的描述 -->
                     <div class="image-description">
-                      {{ descriptions[index] }}
+                      <b><p :style="{ fontSize: '30px' }">{{titles[0]}}</p></b>
+                      {{ descriptions[0] }}
                     </div>
                   </div>
                 </el-col>
@@ -67,13 +68,14 @@
             <div v-if="selectedNumber === null && images.length === 1" class="single-image-container">
               <div class="image-wrapper">
                 <!-- 显示图片 -->
-                <img :src="images[0]" alt="图片" class="single-image" @click="handleImageClick(7)"/>
+                <img :src="images[0]" alt="图片" class="single-image" @click="handleImageClick(8)"/>
                 <!-- 图片下方的描述 -->
                 <div class="image-description">
                   <b><p :style="{ fontSize: '30px' }">{{titles[0]}}</p></b>
                   <p v-html="descriptions[0]"></p>
                 </div>
               </div>
+
             </div>
 
             <!-- 主界面 -->
@@ -167,7 +169,7 @@
 <script>
 import * as echarts from 'echarts';
 import logo from '@/assets/logo1.jpg'
-import image4 from '@/assets/7.png'
+import image4 from '@/assets/4.png'
 import no_show from '@/assets/img.png'
 import {data} from "autoprefixer";
 
@@ -224,10 +226,10 @@ export default {
         "#bcbbd0"
       ],
       titles: [
-        "电话欺诈检测子模块",
+        "账户接管欺诈检测子模块",
       ],
       descriptions: [
-        "电信欺诈是指通过电话、短信等方式，编造虚假信息、设置骗局，对受害人实施远程、非接触式诈骗的非法行为。<br>电话欺诈检测子模块提供数据上传、欺诈行为模式分析、欺诈用户检测和欺诈数据结果分析功能。",
+        "账户接管欺诈检测子模块提供用户身份认证和设备行为管控两大核心功能，运用先进智能技术深入分析用户的多元<br>特征数据，精准识别用户身份，并严密监控设备的异常行为，为个人及组织的设备数据安全与隐私筑起坚实的防线。",
       ],
       legend_data: [],
       data: [],
@@ -270,7 +272,7 @@ export default {
         console.log("number")
         console.log(number)
 
-        if (number === 7 || number === '7'){
+        if (number === 8 || number === '8'){
           console.log("in")
           console.log(number)
           this.$nextTick(() => {

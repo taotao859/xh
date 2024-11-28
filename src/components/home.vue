@@ -21,6 +21,9 @@
         <el-menu-item index="/telecom">
           <i class="el-icon-phone" style="color: white"></i>
         </el-menu-item>
+        <el-menu-item index="/ATO">
+          <i class="el-icon-s-check" style="color: white"></i>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
@@ -36,7 +39,7 @@
       </el-header>
       <el-main style="overflow: hidden">
         <el-card style="height: 100%; overflow-y:auto" shadow="never">
-          <el-row style="margin-bottom: 300px;" align="middle">
+          <el-row style="margin-bottom: 80px;" align="middle">
             <el-col :span="4" style="text-align: left;">
               <h2 style="margin: 0;">主页</h2>
             </el-col>
@@ -69,7 +72,7 @@
                 <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small_top top_small"><div style="margin-top: 35px">洗钱欺诈</div></div>
               </div>
-              <div class="cube_small blue" @click="handleClick('7')" style="z-index: 6; margin-left: -20px; margin-top: -50px">
+              <div class="cube_small blue" @click="handleClick('8')" style="z-index: 6; margin-left: -20px; margin-top: -50px">
                 <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
                 <div class="face_small_top top_small"><div style="margin-top: 35px">ATO欺诈</div></div>
@@ -149,9 +152,13 @@ export default {
         const params = { id: 3 }
         this.$router.push({ path: '/mlmodel', query: params })
       }
-      if (label === '4') {
-        const params = { id: 4 }
-        this.$router.push({ path: '/mlmodel', query: params })
+      if (label === '8') {
+        // this.$message({
+        //   message: "功能未开放",
+        //   type: "warning",
+        // });
+        const params = { id: 8 }
+        this.$router.push({ path: '/ATO', query: params })
       }
       if (label === '5') {
         this.$router.push({ path: '/agent' })
