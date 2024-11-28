@@ -20,6 +20,9 @@
         <el-menu-item index="/telecom">
           <i class="el-icon-phone" style="color: white"></i>
         </el-menu-item>
+        <el-menu-item index="/ATO">
+          <i class="el-icon-s-check" style="color: white"></i>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
@@ -44,7 +47,7 @@
           <!-- 标题 -->
           <el-row style="margin-bottom: 20px;" align="middle">
             <el-col :span="24" style="text-align: left;">
-              <h2 style="margin: 0;">大模型 Agent 对话</h2>
+              <h2 style="margin: 0;">智驭风控AI —— 大模型风险决策助手</h2>
             </el-col>
           </el-row>
 
@@ -79,7 +82,7 @@
             style="
           flex: 1;
           display: flex;
-          max-height: calc(100vh - 300px);
+          max-height: calc(100vh - 150px);
           flex-direction: column;
           background-color: white;
           border: 1px solid #ebeef5;
@@ -96,17 +99,21 @@
             background-color: #f2f2f2;
           "
             >
-              <div
-                v-for="(msg, index) in messages"
-                :key="index"
-                class="message-box"
-                :class="msg.role === 'user' ? 'user-box' : 'bot-box'"
-              >
-                <div :class="{ 'name-box': msg.role === 'user', 'ai-box': msg.role === 'system' }">
-                  {{ msg.role === 'user' ? salesName : 'AI' }}
+              <div ref="messageList"
+                   style="flex: 1; overflow-y: auto; padding: 10px; background-color: #f2f2f2;">
+                <div
+                  v-for="(msg, index) in messages"
+                  :key="index"
+                  class="message-box"
+                  :class="msg.role === 'user' ? 'user-box' : 'bot-box'">
+                  <div :class="{ 'name-box': msg.role === 'user', 'ai-box': msg.role === 'system' }">
+                    {{ msg.role === 'user' ? "用户" : '智驭风控AI' }}
+                  </div>
+                  <div class="content-box" v-html="renderMarkdown(msg.content, index)"></div>
                 </div>
-                <div class="content-box" v-html="renderMarkdown(msg.content)"></div>
               </div>
+
+
             </div>
 
             <!-- 输入区 -->
@@ -191,6 +198,7 @@ export default {
       salesName: this.$cookie.get('name'),
       userInput: '', // 用户输入的内容
       disabled_info: false,
+      isTyping: false,
       messages: [] // 存储对话记录
     }
   },
@@ -201,7 +209,7 @@ export default {
     this.disabled_info = false
   },
   methods: {
-    renderMarkdown(content) {
+    renderMarkdown(content, index) {
       // 实现 Markdown 渲染逻辑
       content = content.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
       content = content.replace(/__(.+?)__/g, '<strong>$1</strong>');
@@ -210,29 +218,75 @@ export default {
       content = content.replace(/\n/g, '<br />');
       content = content.replace(/```([\s\S]+?)```/g, '<pre><code>$1</code></pre>');
       content = content.replace(/`([^`]+)`/g, '<code>$1</code>');
+      if (this.isTyping && index === this.messages.length - 1 ) {
+        content += '<div class="typing-indicator">...</div>'
+      }
       return content;
     },
     sendMessage() {
       if (this.userInput.trim()) {
-        // 将用户消息添加到消息记录
-        this.$message.success('开始对话，请稍后');
-        this.disabled_info = true
+        this.$message.success('开始对话，请稍等');
+        this.disabled_info = true;
         this.messages.push({ role: "user", content: this.userInput });
-        this.scrollToBottom()
+        this.scrollToBottom();
+
         // 清空输入框
         this.userInput = "";
-        const formData = new FormData()
-        formData.append('messages', JSON.stringify(this.messages))
-        this.$axios.post('/getAgent', formData).then(Response => {
-          this.$message.success('对话成功');
-          this.messages.push({ role: "system", content: Response.data.result });
-          this.scrollToBottom()
-          this.disabled_info = false
+        this.isTyping = true;
+        this.messages.push({ role: "system", content: "正在思考" });
+        this.scrollToBottom();
+
+        const requestData = {
+          messages: this.messages
+        };
+
+        // 使用 fetch 发送 POST 请求，流式接收数据
+        fetch('http://localhost:8443/api/getAgent', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(requestData)
         })
+          .then(response => {
+            const reader = response.body.getReader();  // 获取流的 Reader
+            const decoder = new TextDecoder();
+            let content = "";  // 存储逐步接收的内容
 
+            const processText = ({ done, value }) => {  // 使用箭头函数保证 `this` 不丢失
+              // console.log('this inside processText:', this);  // 查看 this
+              // console.log('this.messages inside processText:', this.messages);  // 查看 messages
 
+              if (done) {
+                this.isTyping = false;
+                this.messages[this.messages.length - 1].content = content;
+                this.scrollToBottom();
+                this.disabled_info = false;
+                return;
+              }
+
+              content += decoder.decode(value, { stream: true });
+              // console.log(content);
+              // console.log(this.messages);
+              this.messages[this.messages.length - 1].content = content;
+              this.scrollToBottom();
+
+              // 继续读取流
+              reader.read().then(processText);
+            };
+
+            reader.read().then(processText);  // 调用 processText 进行递归处理
+          })
+          .catch(error => {
+            console.error('Request error:', error);
+          }).catch(error => {
+          console.error('Request error:', error);
+          this.$message.error('发生错误');
+          this.disabled_info = false;
+        });
       }
     },
+
     scrollToBottom() {
       this.$nextTick(() => {
         const container = this.$refs.messageList;
@@ -299,7 +353,7 @@ export default {
 }
 
 .name-box {
-  min-width: 50px;
+  min-width: 100px;
   font-weight: bold;
   margin-right: 10px;
   text-align: right;
@@ -307,7 +361,7 @@ export default {
 }
 
 .ai-box {
-  min-width: 50px;
+  min-width: 100px;
   font-weight: bold;
   margin-right: 10px;
   text-align: right;
@@ -318,7 +372,7 @@ export default {
   padding: 10px;
   border-radius: 8px;
   border: 1px solid #dcdfe6;
-  max-width: 60%;
+  max-width: 85%;
   word-wrap: break-word;
   display: inline-block;
   background-color: #ffffff;
@@ -332,5 +386,17 @@ export default {
 .bot-box .content-box {
   background-color: white;
 }
+.typing-indicator {
+  font-size: 24px;
+  color: #666;
+  animation: blink 1s step-end infinite;
+}
+
+@keyframes blink {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
 </style>
 
