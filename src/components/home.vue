@@ -44,66 +44,71 @@
               <h2 style="margin: 0;">主页</h2>
             </el-col>
           </el-row>
-          <div style="width: 500px;
-              height: 400px;
-              perspective: 1000px;
-              margin: 0 auto;
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              gap: 20px;">
-            <div class="row small-cubes">
-              <div class="cube_small blue" @click="handleClick('1')" style="z-index: 7">
-                <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>
-                <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
-                <div class="face_small_top top_small"><div style="margin-top: 35px">信贷欺诈</div></div>
-              </div>
-              <div class="cube_small blue" @click="handleClick('3')" style="z-index: 6; margin-left: -20px; margin-top: -50px">
-                <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>
-                <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
-                <div class="face_small_top top_small"><div style="margin-top: 35px">银行卡欺诈</div></div>
-              </div>
+<!--          <div style="width: 500px;-->
+<!--              height: 400px;-->
+<!--              perspective: 1000px;-->
+<!--              margin: 0 auto;-->
+<!--              display: flex;-->
+<!--              flex-direction: column;-->
+<!--              align-items: center;-->
+<!--              justify-content: center;-->
+<!--              gap: 20px;">-->
+<!--            <div class="row small-cubes">-->
+<!--              <div class="cube_small blue" @click="handleClick('1')" style="z-index: 7">-->
+<!--                <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>-->
+<!--                <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>-->
+<!--                <div class="face_small_top top_small"><div style="margin-top: 35px">信贷欺诈</div></div>-->
+<!--              </div>-->
+<!--              <div class="cube_small blue" @click="handleClick('3')" style="z-index: 6; margin-left: -20px; margin-top: -50px">-->
+<!--                <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>-->
+<!--                <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>-->
+<!--                <div class="face_small_top top_small"><div style="margin-top: 35px">银行卡欺诈</div></div>-->
+<!--              </div>-->
 
-            </div>
-            <div class="row_2 small-cubes">
-              <div class="cube_small blue" @click="handleClick('2')" style="z-index: 7">
-                <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>
-                <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
-                <div class="face_small_top top_small"><div style="margin-top: 35px">洗钱欺诈</div></div>
-              </div>
-              <div class="cube_small blue" @click="handleClick('8')" style="z-index: 6; margin-left: -20px; margin-top: -50px">
-                <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>
-                <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>
-                <div class="face_small_top top_small"><div style="margin-top: 35px">ATO欺诈</div></div>
-              </div>
+<!--            </div>-->
+<!--            <div class="row_2 small-cubes">-->
+<!--              <div class="cube_small blue" @click="handleClick('2')" style="z-index: 7">-->
+<!--                <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>-->
+<!--                <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>-->
+<!--                <div class="face_small_top top_small"><div style="margin-top: 35px">洗钱欺诈</div></div>-->
+<!--              </div>-->
+<!--              <div class="cube_small blue" @click="handleClick('8')" style="z-index: 6; margin-left: -20px; margin-top: -50px">-->
+<!--                <div class="face_small front_small"><div style="margin-top: -17.5px"></div></div>-->
+<!--                <div class="face_small left_small"><div style="margin-top: -17.5px"></div></div>-->
+<!--                <div class="face_small_top top_small"><div style="margin-top: 35px">ATO欺诈</div></div>-->
+<!--              </div>-->
 
-            </div>
-            <div class="cube yellow" @click="handleClick('7')"  style="z-index: 5;margin-top: -100px;margin-left: 50px">
-              <div class="face front"><div style="margin-top: -17.5px">电信欺诈检测</div></div>
-              <div class="face left"><div style="margin-top: -17.5px"></div></div>
-              <div class="face_top top"><div style="margin-top: 125px"></div></div>
-            </div>
-            <!-- 中层 -->
-            <div class="cube green" @click="handleClick('5')"  style="z-index: 4;margin-left: 50px">
-              <div class="face front"><div style="margin-top: -17.5px">大模型agent对话</div></div>
-              <div class="face left"><div style="margin-top: -17.5px"></div></div>
-              <div class="face_top top"><div style="margin-top: 125px"></div></div>
-            </div>
-            <!-- 顶层 -->
-            <div class="cube gray" @click="handleClick('6')"  style="z-index: 3;margin-left: 50px">
-              <div class="face front"><div style="margin-top: -17.5px">数据上传与分析</div></div>
-              <div class="face left"><div style="margin-top: -17.5px"></div></div>
-              <div class="face_top top"><div style="margin-top: 125px"></div></div>
-  <!--            <div class="face top">-->
-  <!--              &lt;!&ndash; 顶层分为4个小方块 &ndash;&gt;-->
-  <!--              <div class="sub-cube" onclick="handleClick('Onboarding')">Onboarding</div>-->
-  <!--              <div class="sub-cube" onclick="handleClick('Credit')">Credit</div>-->
-  <!--              <div class="sub-cube" onclick="handleClick('Fraud')">Fraud</div>-->
-  <!--              <div class="sub-cube" onclick="handleClick('Compliance')">Compliance</div>-->
-  <!--            </div>-->
-  <!--            <div class="face bottom">Top Bottom</div>-->
-            </div>
+<!--            </div>-->
+<!--            <div class="cube yellow" @click="handleClick('7')"  style="z-index: 5;margin-top: -100px;margin-left: 50px">-->
+<!--              <div class="face front"><div style="margin-top: -17.5px">电信欺诈检测</div></div>-->
+<!--              <div class="face left"><div style="margin-top: -17.5px"></div></div>-->
+<!--              <div class="face_top top"><div style="margin-top: 125px"></div></div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; 中层 &ndash;&gt;-->
+<!--            <div class="cube green" @click="handleClick('5')"  style="z-index: 4;margin-left: 50px">-->
+<!--              <div class="face front"><div style="margin-top: -17.5px">大模型agent对话</div></div>-->
+<!--              <div class="face left"><div style="margin-top: -17.5px"></div></div>-->
+<!--              <div class="face_top top"><div style="margin-top: 125px"></div></div>-->
+<!--            </div>-->
+<!--            &lt;!&ndash; 顶层 &ndash;&gt;-->
+<!--            <div class="cube gray" @click="handleClick('6')"  style="z-index: 3;margin-left: 50px">-->
+<!--              <div class="face front"><div style="margin-top: -17.5px">数据上传与分析</div></div>-->
+<!--              <div class="face left"><div style="margin-top: -17.5px"></div></div>-->
+<!--              <div class="face_top top"><div style="margin-top: 125px"></div></div>-->
+<!--  &lt;!&ndash;            <div class="face top">&ndash;&gt;-->
+<!--  &lt;!&ndash;              &lt;!&ndash; 顶层分为4个小方块 &ndash;&gt;&ndash;&gt;-->
+<!--  &lt;!&ndash;              <div class="sub-cube" onclick="handleClick('Onboarding')">Onboarding</div>&ndash;&gt;-->
+<!--  &lt;!&ndash;              <div class="sub-cube" onclick="handleClick('Credit')">Credit</div>&ndash;&gt;-->
+<!--  &lt;!&ndash;              <div class="sub-cube" onclick="handleClick('Fraud')">Fraud</div>&ndash;&gt;-->
+<!--  &lt;!&ndash;              <div class="sub-cube" onclick="handleClick('Compliance')">Compliance</div>&ndash;&gt;-->
+<!--  &lt;!&ndash;            </div>&ndash;&gt;-->
+<!--  &lt;!&ndash;            <div class="face bottom">Top Bottom</div>&ndash;&gt;-->
+<!--            </div>-->
+<!--          </div>-->
+          <div class="image-wrapper">
+            <!-- 显示图片 -->
+            <img :src="image" alt="图片" class="single-image"/>
+            <!-- 图片下方的描述 -->
           </div>
         </el-card>
       </el-main>
@@ -113,12 +118,14 @@
 
 <script>
 import logo from '@/assets/logo1.jpg'
+import home from '@/assets/home.png'
 export default {
   name: 'upload',
   data () {
     return {
       pageName: '主页',
       logo: logo,
+      image: home,
       salesName: this.$cookie.get('name'), // 用户名
       hoveredLayer: null, // 当前悬停的层级标题
       topItems: [
@@ -326,4 +333,15 @@ export default {
 .front_small { transform: translateZ(70px); }
 .left_small { transform: rotateY(-90deg) translateZ(70px); }
 .top_small { transform: rotateX(90deg) translateZ(70px); }
+.image-wrapper {
+  width: 100%;
+  height: 100%;
+  text-align: center; /* 让图片和描述都居中 */
+}
+.single-image {
+  width: 80%;
+  height: 80%;
+  object-fit: cover; /* 确保图片按比例填充，不拉伸 */
+  border-radius: 8px; /* 可选：为图片添加圆角 */
+}
 </style>
