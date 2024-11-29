@@ -6,33 +6,33 @@
       </div>
       <el-menu :default-active="this.$router.path" router>
         <el-menu-item index="/home">
-          <i class="el-icon-s-home" style="color: white"></i>
+          <i class="el-icon-s-home" style="color: white;font-size: 30px"></i>
         </el-menu-item>
         <el-menu-item index="/upload">
-          <i class="el-icon-folder-opened" style="color: white"></i>
+          <i class="el-icon-folder-opened" style="color: white;font-size: 30px"></i>
         </el-menu-item>
         <el-menu-item index="/agent">
-          <i class="el-icon-s-comment" style="color: white"></i>
+          <i class="el-icon-s-comment" style="color: white;font-size: 30px"></i>
         </el-menu-item>
         <el-menu-item index="/mlmodel" >
-          <i class="el-icon-data-line" style="color: white"></i>
+          <i class="el-icon-data-line" style="color: white;font-size: 30px"></i>
         </el-menu-item>
         <el-menu-item index="/telecom" @click="resetView">
-          <i class="el-icon-phone" style="color: white"></i>
+          <i class="el-icon-phone" style="color: white;font-size: 30px"></i>
         </el-menu-item>
         <el-menu-item index="/ATO">
-          <i class="el-icon-s-check" style="color: white"></i>
+          <i class="el-icon-s-check" style="color: white;font-size: 30px"></i>
         </el-menu-item>
       </el-menu>
     </el-aside>
     <el-container>
       <el-header>
         <el-row>
-          <el-col :span="4" style="text-align: left">
+          <el-col :span="4" style="text-align: left;font-size: 24px">
             您好, <span id="salesman" v-text="salesName"></span>
           </el-col>
           <el-col :span="20" style="text-align: right">
-            <el-button style="color: white" id="log-out-button" icon="el-icon-switch-button" @click="$router.push({path: '/login'})"></el-button>
+            <el-button style="color: white;font-size: 24px" id="log-out-button" icon="el-icon-switch-button" @click="$router.push({path: '/login'})"></el-button>
           </el-col>
         </el-row>
       </el-header>
